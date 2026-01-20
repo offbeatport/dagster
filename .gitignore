@@ -1,0 +1,107 @@
+# -------------------------
+# Python artifacts
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+*.whl
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.pytype/
+ruff_cache/
+
+# -------------------------
+# Virtual environments
+# -------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# -------------------------
+# Dagster
+# -------------------------
+# Local Dagster storage (runs, schedules, sensors, etc.)
+dagster_home/
+dagster_storage/
+.dagster/
+*.db
+*.sqlite
+*.sqlite3
+
+# Dagster logs
+logs/
+dagster_logs/
+
+# -------------------------
+# Jupyter
+# -------------------------
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# -------------------------
+# IDEs & editors
+# -------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+
+# -------------------------
+# OS files
+# -------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# -------------------------
+# Environment & secrets
+# -------------------------
+.env
+.env.*
+*.key
+*.pem
+
+# -------------------------
+# Build / deploy artifacts
+# -------------------------
+*.log
+*.tmp
+*.out
+
+# -------------------------
+# Terraform / IaC (if used)
+# -------------------------
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# -------------------------
+# Node (if Dagster UI or tooling uses it)
+# -------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# -------------------------
+# Docker
+# -------------------------
+.docker/
+docker-compose.override.yml
