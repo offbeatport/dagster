@@ -1,0 +1,6 @@
+dagster
+dagster-webserver
+requests
+pocketbase
+openai
+python-dotenv

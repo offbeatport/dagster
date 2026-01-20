@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://_N_E/../ui-core/src/automation/css/LatestTickHoverButton.module.css"],"names":[],"mappings":"AAAA,2CACE,WAAY,CACZ,gBAAiB,CACjB,eACF","file":"static/css/abc849d90a012c3c.css","sourcesContent":[".hoverContent {\n  width: 300px;\n  max-height: 300px;\n  overflow-y: auto;\n}\n"],"sourceRoot":"","ignoreList":[]}
