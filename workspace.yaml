@@ -2,3 +2,4 @@ load_from:
   - python_module:
       module_name: burningdemand.definitions
       attribute: defs
+      working_directory: src
