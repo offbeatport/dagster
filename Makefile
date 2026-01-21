@@ -42,12 +42,12 @@ install: ## Install Dagster dependencies
 serve: ## Run Dagster UI locally (no Docker, no code-server)
 	@echo "🧠 Starting Dagster..."
 	@set -a && [ -f .env ] && . .env || true && set +a && \
-	  export DAGSTER_HOME=$$(pwd) && \
-	  .venv/bin/dagster dev -h 0.0.0.0 -p 8091 
+	  export DAGSTER_HOME=$$(pwd)/dagster_home && \
+	  .venv/bin/dagster dev -h 0.0.0.0 -p 8091
 
 
 
 clean: ## Remove build artifacts (App + PocketBase + Dagster)
 	@echo "🧹 Cleaning build artifacts..."
-	@rm -rf .venv dagster_home __pycache__
+	@rm -rf  dagster_home __pycache__
 	@echo "✅ Clean complete"

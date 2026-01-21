@@ -26,14 +26,14 @@ from burningdemand.pb import pb_client_from_env
         "max_total": Field(Int, default_value=100, description="Max total items across all queries"),
     },
 )
-def collect_github() -> Dict[str, Any]:
+def collect_github(context) -> Dict[str, Any]:
     """
     Uses GitHub Search Issues API. You can include repo scoping in queries like:
       'repo:ORG/REPO workaround in:body is:issue'
     """
     log = get_dagster_logger()
     log.info("Starting GitHub collector qwd qwd qwd qd qdq d wd qwd ")
-    cfg = collect_github.config
+    cfg = context.op_config
     token = os.getenv("GITHUB_TOKEN")
     if not token:
         raise RuntimeError(
@@ -64,6 +64,8 @@ def collect_github() -> Dict[str, Any]:
         items = data.get("items") or []
 
         for it in items:
+            println(it)
+            return stats
             if stats["fetched"] >= max_total:
                 break
 
