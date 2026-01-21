@@ -1,4 +1,4 @@
-.PHONY: install up run-job dg
+.PHONY: install up run-job 
 
 # Default target
 .DEFAULT_GOAL := up
@@ -43,7 +43,8 @@ serve: ## Run Dagster UI locally (no Docker, no code-server)
 	@echo "🧠 Starting Dagster..."
 	@set -a && [ -f .env ] && . .env || true && set +a && \
 	  export DAGSTER_HOME=$$(pwd) && \
-	  .venv/bin/dagster 
+	  .venv/bin/dagster dev -h 0.0.0.0 -p 8091 
+
 
 
 clean: ## Remove build artifacts (App + PocketBase + Dagster)
