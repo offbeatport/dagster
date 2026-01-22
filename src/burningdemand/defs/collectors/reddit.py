@@ -2,7 +2,7 @@ import os
 import time
 from typing import Any, Dict
 
-from dagster import Array, Field, Int, String, get_dagster_logger, op
+from dagster import AssetExecutionContext, Config, asset, get_dagster_logger
 
 from burningdemand.defs.common import COMMON_RETRY
 from burningdemand.defs.utils import (
@@ -12,31 +12,35 @@ from burningdemand.defs.utils import (
     make_content_hash,
     normalize_text,
 )
-from burningdemand.defs.pb import pb_client_from_env
+from burningdemand.resources import PocketBaseResource
 
 
-@op(
+class RedditCollectorConfig(Config):
+    subreddits: list[str] = ["startups", "saas"]
+    query: str = 'blocked OR workaround OR "does anyone"'
+    limit: int = 25
+    keywords: list[str] = ["blocked", "workaround", "pain"]
+
+
+@asset(
     retry_policy=COMMON_RETRY,
-    config_schema={
-        "subreddits": Field(Array(String), default_value=["startups", "saas"]),
-        "query": Field(String, default_value='blocked OR workaround OR "does anyone"'),
-        "limit": Field(Int, default_value=25),
-        "keywords": Field(Array(String), default_value=["blocked", "workaround", "pain"], is_required=False),
-    },
+    description="Collects Reddit posts matching pain point queries",
 )
-def collect_reddit() -> Dict[str, Any]:
+def reddit_posts(
+    context: AssetExecutionContext,
+    config: RedditCollectorConfig,
+    pb: PocketBaseResource,
+) -> Dict[str, Any]:
     """
     Simple public Reddit search.json. For production reliability, switch to OAuth.
     This is still useful for early-stage signal mining.
     """
     log = get_dagster_logger()
-    cfg = collect_reddit.config
-    pb = pb_client_from_env()
 
-    subreddits = cfg["subreddits"]
-    query = cfg["query"]
-    limit = min(int(cfg["limit"]), 100)
-    keywords = cfg.get("keywords") or []
+    subreddits = config.subreddits
+    query = config.query
+    limit = min(config.limit, 100)
+    keywords = config.keywords or []
 
     headers = {
         "User-Agent": os.getenv("REDDIT_USER_AGENT", "BurningDemand/1.0")}

@@ -1,7 +1,7 @@
 import time
 from typing import Any, Dict
 
-from dagster import Array, Field, Int, String, get_dagster_logger, op
+from dagster import AssetExecutionContext, Config, asset, get_dagster_logger
 
 from burningdemand.defs.common import COMMON_RETRY
 from burningdemand.defs.utils import (
@@ -12,35 +12,34 @@ from burningdemand.defs.utils import (
     normalize_text,
     strip_hn_html,
 )
-from burningdemand.defs.pb import pb_client_from_env
+from burningdemand.resources import PocketBaseResource
 
 
-@op(
+class HackerNewsCollectorConfig(Config):
+    max_items: int = 200
+    keywords: list[str] = ["blocked", "workaround", "pain", "does anyone", "we had to"]
+    mode: str = "newstories"  # newstories|topstories|askstories
+    sleep_ms: int = 0
+
+
+@asset(
     retry_policy=COMMON_RETRY,
-    config_schema={
-        "max_items": Field(Int, default_value=200, description="Max items to scan per run"),
-        "keywords": Field(
-            Array(String),
-            default_value=["blocked", "workaround",
-                           "pain", "does anyone", "we had to"],
-            is_required=False,
-        ),
-        "mode": Field(String, default_value="newstories", description="HN feed: newstories|topstories|askstories"),
-        "sleep_ms": Field(Int, default_value=0, description="Optional throttle between item fetches"),
-    },
+    description="Collects HackerNews stories matching pain point keywords",
 )
-def collect_hackernews() -> Dict[str, Any]:
+def hackernews_stories(
+    context: AssetExecutionContext,
+    config: HackerNewsCollectorConfig,
+    pb: PocketBaseResource,
+) -> Dict[str, Any]:
     """
     Fetch HN story items from Firebase API and upsert into PocketBase ing_items.
     """
     log = get_dagster_logger()
-    cfg = collect_hackernews.config
-    pb = pb_client_from_env()
 
-    mode = cfg["mode"]
-    max_items = int(cfg["max_items"])
-    keywords = cfg.get("keywords") or []
-    sleep_ms = int(cfg.get("sleep_ms") or 0)
+    mode = config.mode
+    max_items = config.max_items
+    keywords = config.keywords or []
+    sleep_ms = config.sleep_ms
 
     ids_url = f"https://hacker-news.firebaseio.com/v0/{mode}.json"
     ids = http_get_json(ids_url)

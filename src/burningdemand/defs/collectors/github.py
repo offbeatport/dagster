@@ -1,7 +1,7 @@
 import os
 from typing import Any, Dict
 
-from dagster import Array, Field, Int, String, get_dagster_logger, op
+from dagster import AssetExecutionContext, Config, asset, get_dagster_logger
 
 from burningdemand.defs.common import COMMON_RETRY
 from burningdemand.defs.utils import (
@@ -9,37 +9,37 @@ from burningdemand.defs.utils import (
     make_content_hash_with_updated,
     normalize_text,
 )
-from burningdemand.defs.pb import pb_client_from_env
+from burningdemand.resources import PocketBaseResource
 
 
-@op(
+class GitHubCollectorConfig(Config):
+    queries: list[str] = [
+        "workaround in:body is:issue is:open",
+        '"this blocks" in:body is:issue',
+    ]
+    per_page: int = 30
+    max_total: int = 100
+
+
+@asset(
     retry_policy=COMMON_RETRY,
-    config_schema={
-        "queries": Field(
-            Array(String),
-            default_value=[
-                "workaround in:body is:issue is:open",
-                '"this blocks" in:body is:issue',
-            ],
-        ),
-        "per_page": Field(Int, default_value=30),
-        "max_total": Field(Int, default_value=100, description="Max total items across all queries"),
-    },
+    description="Collects GitHub issues matching pain point queries",
 )
-def collect_github(context) -> Dict[str, Any]:
+def github_issues(
+    context: AssetExecutionContext,
+    config: GitHubCollectorConfig,
+    pb: PocketBaseResource,
+) -> Dict[str, Any]:
     """
     Uses GitHub Search Issues API. You can include repo scoping in queries like:
       'repo:ORG/REPO workaround in:body is:issue'
     """
     log = get_dagster_logger()
-    log.info("Starting GitHub collector qwd qwd qwd qd qdq d wd qwd ")
-    cfg = context.op_config
+    log.info("Starting GitHub collector")
     token = os.getenv("GITHUB_TOKEN")
     if not token:
         raise RuntimeError(
             "Missing GITHUB_TOKEN env var for GitHub collector.")
-
-    pb = pb_client_from_env()
 
     headers = {
         "Accept": "application/vnd.github+json",
@@ -47,9 +47,9 @@ def collect_github(context) -> Dict[str, Any]:
         "User-Agent": "BurningDemand-Dagster",
     }
 
-    queries = cfg["queries"]
-    per_page = int(cfg["per_page"])
-    max_total = int(cfg["max_total"])
+    queries = config.queries
+    per_page = config.per_page
+    max_total = config.max_total
 
     stats = {"fetched": 0, "created": 0, "updated": 0, "skipped": 0}
     for q in queries:

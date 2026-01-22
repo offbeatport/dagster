@@ -2,7 +2,7 @@ import os
 import time
 from typing import Any, Dict
 
-from dagster import Array, Field, Int, String, get_dagster_logger, op
+from dagster import AssetExecutionContext, Config, asset, get_dagster_logger
 
 from burningdemand.defs.common import COMMON_RETRY
 from burningdemand.defs.utils import (
@@ -12,33 +12,37 @@ from burningdemand.defs.utils import (
     make_content_hash,
     normalize_text,
 )
-from burningdemand.defs.pb import pb_client_from_env
+from burningdemand.resources import PocketBaseResource
 
 
-@op(
+class StackOverflowCollectorConfig(Config):
+    tags: list[str] = ["jira", "oauth", "payments"]
+    pagesize: int = 30
+    max_pages: int = 2
+    sort: str = "activity"  # activity|creation|votes
+    keywords: list[str] = ["blocked", "workaround", "can't", "unable"]
+
+
+@asset(
     retry_policy=COMMON_RETRY,
-    config_schema={
-        "tags": Field(Array(String), default_value=["jira", "oauth", "payments"]),
-        "pagesize": Field(Int, default_value=30),
-        "max_pages": Field(Int, default_value=2),
-        "sort": Field(String, default_value="activity", description="activity|creation|votes"),
-        "keywords": Field(Array(String), default_value=["blocked", "workaround", "can't", "unable"], is_required=False),
-    },
+    description="Collects StackOverflow questions matching pain point tags and keywords",
 )
-def collect_stackoverflow() -> Dict[str, Any]:
+def stackoverflow_questions(
+    context: AssetExecutionContext,
+    config: StackOverflowCollectorConfig,
+    pb: PocketBaseResource,
+) -> Dict[str, Any]:
     """
     Stack Exchange API. Optional env STACKEXCHANGE_KEY to increase quota.
     """
     log = get_dagster_logger()
-    cfg = collect_stackoverflow.config
-    pb = pb_client_from_env()
 
     key = os.getenv("STACKEXCHANGE_KEY")
-    tagged = ";".join(cfg["tags"])
-    pagesize = min(int(cfg["pagesize"]), 100)
-    max_pages = int(cfg["max_pages"])
-    sort = cfg["sort"]
-    keywords = cfg.get("keywords") or []
+    tagged = ";".join(config.tags)
+    pagesize = min(config.pagesize, 100)
+    max_pages = config.max_pages
+    sort = config.sort
+    keywords = config.keywords or []
 
     stats = {"fetched": 0, "matched": 0,
              "created": 0, "updated": 0, "skipped": 0}

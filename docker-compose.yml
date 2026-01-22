@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  dagster-webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dagster-webserver
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:8091"
+    environment:
+      - DAGSTER_HOME=/opt/dagster/dagster_home
+    volumes:
+      - dagster_home:/opt/dagster/dagster_home
+    command: [ "dagster-webserver", "-h", "0.0.0.0", "-p", "8091", "-m", "burningdemand.definitions" ]
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8091/" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  dagster-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dagster-daemon
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DAGSTER_HOME=/opt/dagster/dagster_home
+    volumes:
+      - dagster_home:/opt/dagster/dagster_home
+    command: [ "dagster-daemon", "run", "-m", "burningdemand.definitions" ]
+    healthcheck:
+      test: [ "CMD", "pgrep", "-f", "dagster-daemon" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      - dagster-webserver
+
+volumes:
+  dagster_home:

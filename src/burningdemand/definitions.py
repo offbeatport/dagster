@@ -1,36 +1,15 @@
-from dagster import Definitions, job
+from dagster import Definitions
 
-from burningdemand.defs.collectors.github import collect_github
-from burningdemand.defs.collectors.hackernews import collect_hackernews
-from burningdemand.defs.collectors.reddit import collect_reddit
-from burningdemand.defs.collectors.stackoverflow import collect_stackoverflow
-
-
-# ----------------------------
-# Jobs (one per collector)
-# ----------------------------
-
-@job
-def hn_collect_job():
-    collect_hackernews()
-
-
-@job
-def github_collect_job():
-    collect_github()
-
-
-@job
-def so_collect_job():
-    collect_stackoverflow()
-
-
-@job
-def reddit_collect_job():
-    collect_reddit()
+from burningdemand.defs.collectors.github import github_issues
+from burningdemand.defs.collectors.hackernews import hackernews_stories
+from burningdemand.defs.collectors.reddit import reddit_posts
+from burningdemand.defs.collectors.stackoverflow import stackoverflow_questions
+from burningdemand.resources import PocketBaseResource
 
 
 defs = Definitions(
-    jobs=[hn_collect_job, github_collect_job,
-          so_collect_job, reddit_collect_job],
+    assets=[github_issues, hackernews_stories, reddit_posts, stackoverflow_questions],
+    resources={
+        "pb": PocketBaseResource.from_env(),
+    },
 )
