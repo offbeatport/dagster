@@ -3,13 +3,13 @@ from typing import Any, Dict
 
 from dagster import AssetExecutionContext, Config, asset, get_dagster_logger
 
-from burningdemand.defs.common import COMMON_RETRY
-from burningdemand.defs.utils import (
+from .common import COMMON_RETRY
+from .utils import (
     http_get_json,
     make_content_hash_with_updated,
     normalize_text,
 )
-from burningdemand.resources import PocketBaseResource
+from ..resources import PocketBaseResource
 
 
 class GitHubCollectorConfig(Config):

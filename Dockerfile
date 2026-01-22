@@ -10,15 +10,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /opt/dagster/app
 
-# Install build dependencies and the project
+# Copy project files
 COPY pyproject.toml ./
+COPY src/ ./src/
+COPY dagster.yaml ./
+
+# Install build dependencies and the project
 RUN pip install --no-cache-dir -U pip \
     && pip install --no-cache-dir build \
     && pip install --no-cache-dir -e .
-
-# Copy source code
-COPY src/ ./src/
-COPY dagster.yaml ./
 
 ENV DAGSTER_HOME=/opt/dagster/dagster_home
 RUN mkdir -p "$DAGSTER_HOME" \

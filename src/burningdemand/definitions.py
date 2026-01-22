@@ -1,10 +1,10 @@
 from dagster import Definitions
 
-from burningdemand.defs.collectors.github import github_issues
-from burningdemand.defs.collectors.hackernews import hackernews_stories
-from burningdemand.defs.collectors.reddit import reddit_posts
-from burningdemand.defs.collectors.stackoverflow import stackoverflow_questions
-from burningdemand.resources import PocketBaseResource
+from .assets.github import github_issues
+from .assets.hackernews import hackernews_stories
+from .assets.reddit import reddit_posts
+from .assets.stackoverflow import stackoverflow_questions
+from .resources.pocketbase import PocketBaseResource
 
 
 defs = Definitions(

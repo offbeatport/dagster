@@ -3,8 +3,8 @@ from typing import Any, Dict
 
 from dagster import AssetExecutionContext, Config, asset, get_dagster_logger
 
-from burningdemand.defs.common import COMMON_RETRY
-from burningdemand.defs.utils import (
+from .common import COMMON_RETRY
+from .utils import (
     http_get_json,
     iso_from_unix,
     keyword_hit,
