@@ -7,15 +7,27 @@ services:
       dockerfile: Dockerfile
     container_name: dagster-webserver
     restart: unless-stopped
-    env_file:
-      - .env
     ports:
-      - "${PORT}:8091"
+      - "${PORT:-8091}:8091"
     environment:
       - DAGSTER_HOME=/opt/dagster/dagster_home
+      - PB_URL=${PB_URL:-http://127.0.0.1:8090}
+      - PB_WORKER_EMAIL=${PB_WORKER_EMAIL}
+      - PB_WORKER_PASSWORD=${PB_WORKER_PASSWORD}
+      - PB_AUTH_COLLECTION=${PB_AUTH_COLLECTION:-users}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - REDDIT_USER_AGENT=${REDDIT_USER_AGENT:-BurningDemand/1.0}
+      - STACKEXCHANGE_KEY=${STACKEXCHANGE_KEY}
     volumes:
       - dagster_home:/opt/dagster/dagster_home
     command: [ "dagster-webserver", "-h", "0.0.0.0", "-p", "8091", "-m", "burningdemand.definitions" ]
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8091/" ]
       interval: 30s
@@ -29,13 +41,25 @@ services:
       dockerfile: Dockerfile
     container_name: dagster-daemon
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
       - DAGSTER_HOME=/opt/dagster/dagster_home
+      - PB_URL=${PB_URL:-http://127.0.0.1:8090}
+      - PB_WORKER_EMAIL=${PB_WORKER_EMAIL}
+      - PB_WORKER_PASSWORD=${PB_WORKER_PASSWORD}
+      - PB_AUTH_COLLECTION=${PB_AUTH_COLLECTION:-users}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - REDDIT_USER_AGENT=${REDDIT_USER_AGENT:-BurningDemand/1.0}
+      - STACKEXCHANGE_KEY=${STACKEXCHANGE_KEY}
     volumes:
       - dagster_home:/opt/dagster/dagster_home
     command: [ "dagster-daemon", "run", "-m", "burningdemand.definitions" ]
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
     healthcheck:
       test: [ "CMD", "pgrep", "-f", "dagster-daemon" ]
       interval: 30s
