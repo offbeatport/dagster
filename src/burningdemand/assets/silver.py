@@ -8,7 +8,13 @@ from ..resources.duckdb_resource import DuckDBResource
 from ..resources.embedding_resource import EmbeddingResource
 from ..assets.bronze import bronze_raw_items
 
-@asset(partitions_def=daily_partitions, compute_kind="compute", group_name="silver", deps=[bronze_raw_items])
+
+@asset(
+    partitions_def=daily_partitions,
+    compute_kind="compute",
+    group_name="silver",
+    deps=[bronze_raw_items],
+)
 def silver_items_with_embeddings(
     context: AssetExecutionContext,
     db: DuckDBResource,
@@ -39,7 +45,15 @@ def silver_items_with_embeddings(
 
     for i in range(0, len(items), batch_size):
         batch = items.iloc[i : i + batch_size].copy()
-        texts = (batch["title"].fillna("").astype(str) + " " + batch["body"].fillna("").astype(str)).str.strip().tolist()
+        texts = (
+            (
+                batch["title"].fillna("").astype(str)
+                + " "
+                + batch["body"].fillna("").astype(str)
+            )
+            .str.strip()
+            .tolist()
+        )
 
         embs = embedding.encode(texts)  # ndarray (n, 384)
         # store embedding as list[float] per row (DuckDB FLOAT[384])
@@ -49,13 +63,31 @@ def silver_items_with_embeddings(
         inserted_attempt = db.insert_df(
             "silver_items_with_embeddings",
             batch,
-            ["url_hash", "source", "collection_date", "url", "title", "body", "created_at", "embedding", "embedding_date"],
+            [
+                "url_hash",
+                "source",
+                "collection_date",
+                "url",
+                "title",
+                "body",
+                "created_at",
+                "embedding",
+                "embedding_date",
+            ],
         )
         enriched += int(inserted_attempt)
 
-    return MaterializeResult(metadata={"enriched": int(enriched), "batch_size": int(batch_size)})
+    return MaterializeResult(
+        metadata={"enriched": int(enriched), "batch_size": int(batch_size)}
+    )
 
-@asset(partitions_def=daily_partitions, compute_kind="compute", group_name="silver", deps=[silver_items_with_embeddings])
+
+@asset(
+    partitions_def=daily_partitions,
+    compute_kind="compute",
+    group_name="silver",
+    deps=[silver_items_with_embeddings],
+)
 def silver_clusters(
     context: AssetExecutionContext,
     db: DuckDBResource,
@@ -109,12 +141,18 @@ def silver_clusters(
         }
     )
 
-    db.insert_df("silver_cluster_members", members_df, ["cluster_date", "cluster_id", "url_hash"])
+    db.insert_df(
+        "silver_cluster_members", members_df, ["cluster_date", "cluster_id", "url_hash"]
+    )
 
     sizes = list(size_by_cluster.values()) if size_by_cluster else [0]
     sizes_sorted = sorted(sizes)
     p50 = sizes_sorted[len(sizes_sorted) // 2]
-    p90 = sizes_sorted[int(len(sizes_sorted) * 0.9) - 1] if len(sizes_sorted) >= 10 else sizes_sorted[-1]
+    p90 = (
+        sizes_sorted[int(len(sizes_sorted) * 0.9) - 1]
+        if len(sizes_sorted) >= 10
+        else sizes_sorted[-1]
+    )
 
     return MaterializeResult(
         metadata={

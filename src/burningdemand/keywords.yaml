@@ -3,7 +3,6 @@
 # Rule: if a post matches ANY of these terms, we keep it.
 
 core:
-
   # ---- Strong buying / switching intent ----
   - "looking for"
   - "any recommendations"
@@ -78,9 +77,7 @@ core:
   - "ops"
   - "devops"
 
-
 sources:
-
   github:
     extra:
       - "feature request"

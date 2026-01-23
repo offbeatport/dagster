@@ -22,7 +22,15 @@ async def bronze_raw_items(
     items, meta = await collect_source_async(source, date, apis, http.aclient)
 
     if not items:
-        return MaterializeResult(metadata={"source": source, "date": date, "collected": 0, "insert_attempted": 0, "collector": meta})
+        return MaterializeResult(
+            metadata={
+                "source": source,
+                "date": date,
+                "collected": 0,
+                "insert_attempted": 0,
+                "collector": meta,
+            }
+        )
 
     df = pd.DataFrame(items)
     df["url"] = df["url"].map(normalize_url)
@@ -37,8 +45,7 @@ async def bronze_raw_items(
     inserted_attempt = db.insert_df(
         "bronze_raw_items",
         df,
-        ["url_hash", "source", "collection_date",
-            "url", "title", "body", "created_at"],
+        ["url_hash", "source", "collection_date", "url", "title", "body", "created_at"],
     )
 
     return MaterializeResult(

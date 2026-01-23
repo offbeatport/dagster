@@ -115,10 +115,12 @@ Return ONLY valid JSON:
             except Exception as e:
                 errors.append(f"cluster_id={cid}: {type(e).__name__}: {e}")
 
-    await asyncio.gather(*[
-        label_one(int(r["cluster_id"]), int(r["cluster_size"]))
-        for _, r in unlabeled.iterrows()
-    ])
+    await asyncio.gather(
+        *[
+            label_one(int(r["cluster_id"]), int(r["cluster_size"]))
+            for _, r in unlabeled.iterrows()
+        ]
+    )
 
     if results:
         df = pd.DataFrame(results)
@@ -178,7 +180,12 @@ Return ONLY valid JSON:
     return MaterializeResult(metadata=md)
 
 
-@asset(partitions_def=daily_partitions, compute_kind="io", group_name="gold", deps=[gold_issues])
+@asset(
+    partitions_def=daily_partitions,
+    compute_kind="io",
+    group_name="gold",
+    deps=[gold_issues],
+)
 async def pocketbase_synced_issues(
     context: AssetExecutionContext,
     db: DuckDBResource,

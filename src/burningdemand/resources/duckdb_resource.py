@@ -9,6 +9,7 @@ import pandas as pd
 from dagster import ConfigurableResource
 from pydantic import Field
 
+
 class DuckDBResource(ConfigurableResource):
     db_path: str = Field(default="./data/burningdemand.duckdb")
     schema_path: str = Field(default="burningdemand_dagster/sql/schema.sql")
