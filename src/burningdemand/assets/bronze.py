@@ -1,25 +1,25 @@
-# burningdemand_dagster/assets/bronze.py
 import pandas as pd
 from dagster import AssetExecutionContext, MaterializeResult, asset
 
 from ..partitions import source_day_partitions
 from ..resources.duckdb_resource import DuckDBResource
-from ..resources.external_apis_resource import ExternalAPIsResource
+from ..resources.app_config_resource import AppConfigResource
 from ..resources.http_clients_resource import HTTPClientsResource
 from ..utils.collectors import collect_source_async
 from ..utils.url import normalize_url, url_hash
+
 
 @asset(partitions_def=source_day_partitions, compute_kind="io", group_name="bronze")
 async def bronze_raw_items(
     context: AssetExecutionContext,
     db: DuckDBResource,
-    apis: ExternalAPIsResource,
+    apis: AppConfigResource,
     http: HTTPClientsResource,
 ) -> MaterializeResult:
     source = context.partition_key.keys_by_dimension["source"]
     date = context.partition_key.keys_by_dimension["date"]
 
-    items, meta = await collect_source_async(source, date, apis.github_token, http.aclient)
+    items, meta = await collect_source_async(source, date, apis, http.aclient)
 
     if not items:
         return MaterializeResult(metadata={"source": source, "date": date, "collected": 0, "insert_attempted": 0, "collector": meta})
@@ -37,7 +37,8 @@ async def bronze_raw_items(
     inserted_attempt = db.insert_df(
         "bronze_raw_items",
         df,
-        ["url_hash", "source", "collection_date", "url", "title", "body", "created_at"],
+        ["url_hash", "source", "collection_date",
+            "url", "title", "body", "created_at"],
     )
 
     return MaterializeResult(

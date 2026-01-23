@@ -6,7 +6,7 @@ from dagster import AssetExecutionContext, MaterializeResult, MetadataValue, ass
 
 from ..partitions import daily_partitions
 from ..resources.duckdb_resource import DuckDBResource
-from ..resources.external_apis_resource import ExternalAPIsResource
+from ..resources.app_config_resource import AppConfigResource
 from ..resources.http_clients_resource import HTTPClientsResource
 from ..utils.llm_schema import IssueLabel, extract_first_json_obj
 from ..utils.retries import request_with_retry_async
@@ -18,11 +18,12 @@ _SOURCE_TYPE_MAP = {
     "hackernews": "other",
 }
 
+
 @asset(partitions_def=daily_partitions, compute_kind="ai", group_name="gold", deps=[])
 async def gold_issues(
     context: AssetExecutionContext,
     db: DuckDBResource,
-    apis: ExternalAPIsResource,
+    apis: AppConfigResource,
 ) -> MaterializeResult:
     date = context.partition_key
     client = anthropic.AsyncAnthropic(api_key=apis.anthropic_api_key)
@@ -99,7 +100,6 @@ Return ONLY valid JSON:
                 data = extract_first_json_obj(raw)
                 label = IssueLabel.model_validate(data)
 
-                heat_score = int(size) * (3 if label.impact_level == "high" else 2 if label.impact_level == "medium" else 1)
                 results.append(
                     {
                         "cluster_date": date,
@@ -110,7 +110,6 @@ Return ONLY valid JSON:
                         "would_pay_signal": bool(label.would_pay_signal),
                         "impact_level": label.impact_level,
                         "cluster_size": int(size),
-                        "heat_score": int(heat_score),
                     }
                 )
             except Exception as e:
@@ -137,7 +136,6 @@ Return ONLY valid JSON:
                     "would_pay_signal",
                     "impact_level",
                     "cluster_size",
-                    "heat_score",
                 ],
             )
 
@@ -179,11 +177,12 @@ Return ONLY valid JSON:
 
     return MaterializeResult(metadata=md)
 
+
 @asset(partitions_def=daily_partitions, compute_kind="io", group_name="gold", deps=[gold_issues])
 async def pocketbase_synced_issues(
     context: AssetExecutionContext,
     db: DuckDBResource,
-    apis: ExternalAPIsResource,
+    apis: AppConfigResource,
     http: HTTPClientsResource,
 ) -> MaterializeResult:
     date = context.partition_key
@@ -198,7 +197,7 @@ async def pocketbase_synced_issues(
               WHERE ps.cluster_date = g.cluster_date
                 AND ps.cluster_id = g.cluster_id
           )
-        ORDER BY g.heat_score DESC
+    
         """,
         [date],
     )
@@ -249,7 +248,6 @@ async def pocketbase_synced_issues(
                     "category": issue["category"],
                     "status": "open",
                     "origin": "collected",
-                    "heat_score": int(issue["heat_score"]),
                 },
                 headers=headers,
                 timeout=30,

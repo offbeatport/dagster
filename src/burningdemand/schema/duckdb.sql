@@ -64,7 +64,6 @@ CREATE TABLE IF NOT EXISTS gold_issues (
     would_pay_signal BOOLEAN,
     impact_level     VARCHAR,
     cluster_size     INTEGER,
-    heat_score       INTEGER,
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (cluster_date, cluster_id)
 );

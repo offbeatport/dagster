@@ -9,6 +9,7 @@ dependencies = [
     "duckdb",
     "pydantic",
     "sentence-transformers",
+    "pyyaml",
 ]
 name = "obp-dagster"
 requires-python = ">=3.10,<3.15"
