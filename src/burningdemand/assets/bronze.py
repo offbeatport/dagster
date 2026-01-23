@@ -38,9 +38,14 @@ async def bronze_raw_items(
     df["source"] = source
     df["collection_date"] = date
 
-    # enforce expected cols & sizes
-    df["title"] = df["title"].fillna("").astype(str)
-    df["body"] = df["body"].fillna("").astype(str).str.slice(0, 500)
+    # enforce expected cols & sizes - convert to object dtype for DuckDB compatibility
+    df["title"] = df["title"].fillna("").astype("object")
+    df["body"] = df["body"].fillna("").astype("object").str.slice(0, 500)
+    df["url"] = df["url"].astype("object")
+    df["url_hash"] = df["url_hash"].astype("object")
+    df["source"] = df["source"].astype("object")
+    df["collection_date"] = df["collection_date"].astype("object")
+    df["created_at"] = df["created_at"].fillna("").astype("object")
 
     inserted_attempt = db.insert_df(
         "bronze_raw_items",

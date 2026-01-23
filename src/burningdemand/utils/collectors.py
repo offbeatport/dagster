@@ -1,391 +1,225 @@
 import asyncio
 from datetime import datetime, timezone
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
-
-from ..utils.keywords import (
-    build_stackoverflow_tags,
-    matches_keywords,
-)
+from ..utils.keywords import build_stackoverflow_tags, matches_keywords
 from ..utils.url import iso_date_to_utc_bounds
 
-# ============================================================================
-# Collection Configuration (hardcoded)
-# ============================================================================
-
-BODY_MAX_LENGTH = 500  # Max length for body text
-REDDIT_SUBREDDITS = ["entrepreneur", "SaaS", "startups"]  # Subreddits to monitor
+BODY_MAX_LENGTH = 500
+REDDIT_SUBREDDITS = ["entrepreneur", "SaaS", "startups"]
 
 
 async def collect_source_async(
-    source: str,
-    date: str,
-    apis,
-    http,
-    context,
+    source: str, date: str, apis, http, context
 ) -> Tuple[List[Dict], Dict]:
-    """
-    Collect items for a single (source, date) partition.
-    Supports: github, stackoverflow, reddit, hackernews
+    """Collect items for a single (source, date) partition."""
+    collectors = {
+        "github": _collect_github,
+        "stackoverflow": _collect_stackoverflow,
+        "reddit": _collect_reddit,
+        "hackernews": _collect_hackernews,
+    }
 
-    Returns: (items, metadata)
+    collector = collectors.get(source)
+    if not collector:
+        return [], {"requests": 0, "note": f"unknown source={source}"}
 
-    Item schema:
-      {
-        "url": str,
-        "title": str,
-        "body": str,
-        "created_at": str (iso8601)
-      }
-    """
-    if source == "github":
-        return await _collect_github(
-            date=date,
-            apis=apis,
-            http=http,
-            context=context,
-        )
-
-    if source == "stackoverflow":
-        return await _collect_stackoverflow(
-            date=date,
-            apis=apis,
-            http=http,
-            context=context,
-        )
-
-    if source == "reddit":
-        return await _collect_reddit(
-            date=date,
-            apis=apis,
-            http=http,
-            context=context,
-        )
-
-    if source == "hackernews":
-        return await _collect_hackernews(
-            date=date, apis=apis, http=http, context=context
-        )
-
-    return [], {"requests": 0, "note": f"unknown source={source}"}
+    return await collector(date, apis, http, context)
 
 
-# -----------------------------------------------------------------------------
-# GitHub (token required)
-# -----------------------------------------------------------------------------
-
-
-async def _collect_github(
-    date: str,
-    apis,
-    http,
-    context,
-) -> Tuple[List[Dict], Dict]:
+# GitHub
+async def _collect_github(date: str, apis, http, context) -> Tuple[List[Dict], Dict]:
     from ..utils.keywords import get_source_keywords
 
     headers = {"Authorization": f"token {apis.github_token}"}
-    req_count = 0
+    keywords = get_source_keywords("github")
 
-    # Get all keywords and split into chunks to avoid GitHub's 5 operator limit
-    # GitHub allows max 5 AND/OR/NOT operators, so we can use up to 6 keywords per query (5 ORs)
-    source_keywords = get_source_keywords("github")
-    chunk_size = 6  # 6 keywords = 5 OR operators
-    keyword_chunks = [
-        source_keywords[i : i + chunk_size]
-        for i in range(0, len(source_keywords), chunk_size)
-    ]
-
-    # Build multiple queries, one per chunk
+    # Split into chunks of 6 keywords (5 OR operators max)
     queries = []
-    for chunk in keyword_chunks:
+    for i in range(0, len(keywords), 6):
+        chunk = keywords[i : i + 6]
         keyword_query = " OR ".join([f'"{kw}"' for kw in chunk])
         queries.append(f"is:issue created:{date} ({keyword_query})")
 
-    # Calculate estimated requests: up to 10 pages per query
-    max_pages_per_query = 10
-    estimated_requests = len(queries) * max_pages_per_query
-    context.log.info(
-        f"GitHub collection plan: {len(queries)} queries, "
-        f"up to {max_pages_per_query} pages each = ~{estimated_requests} requests max"
-    )
+    # Build all request specs
+    specs = [
+        {
+            "method": "GET",
+            "url": "https://api.github.com/search/issues",
+            "params": {"q": q, "per_page": 100, "page": p},
+            "headers": headers,
+        }
+        for q in queries
+        for p in range(1, 11)
+    ]
 
-    # Track seen URLs to deduplicate across queries
-    seen_urls = set()
-    all_items = []
+    responses = await http.batch_requests(context, specs, "api.github.com")
 
-    async def fetch_query_pages(query: str):
-        """Fetch all pages for a single query."""
-        nonlocal req_count
-        query_items = []
-        for page in range(1, 11):  # GitHub allows up to 10 pages (1000 results max)
-            req_count += 1
-            resp = await http.request_with_retry_async(
-                "GET",
-                "https://api.github.com/search/issues",
-                params={"q": query, "per_page": 100, "page": page},
-                headers=headers,
-            )
-            page_items = resp.json().get("items", [])
-            if not page_items:  # No more results
-                break
-            query_items.extend(page_items)
+    seen = set()
+    items = []
 
-        return query_items
-
-    # Fetch all queries in parallel - rate limiting is handled in request_with_retry_async
-    all_query_results = await asyncio.gather(*[fetch_query_pages(q) for q in queries])
-
-    # Combine and deduplicate results
-    for query_results in all_query_results:
-        for it in query_results:
+    for resp in responses:
+        for it in resp.json().get("items", []):
             url = it.get("html_url")
-            if not url or url in seen_urls:
+            if not url or url in seen:
                 continue
-            seen_urls.add(url)
 
             title = it.get("title") or ""
             body = it.get("body") or ""
-            combined_text = f"{title} {body}".lower()
 
-            # Filter by keywords (double-check)
-            if not matches_keywords(combined_text, source="github"):
-                continue
+            if matches_keywords(f"{title} {body}".lower(), source="github"):
+                seen.add(url)
+                items.append(
+                    {
+                        "url": url,
+                        "title": title,
+                        "body": body[:BODY_MAX_LENGTH],
+                        "created_at": it.get("created_at") or "",
+                    }
+                )
 
-            all_items.append(
-                {
-                    "url": url,
-                    "title": title,
-                    "body": body[:BODY_MAX_LENGTH],
-                    "created_at": it.get("created_at") or "",
-                }
-            )
-
-    context.log.info(
-        f"GitHub collection completed: {req_count} requests made, {len(all_items)} items collected"
-    )
-    return all_items, {"requests": req_count, "queries": len(queries)}
+    context.log.info(f"GitHub: {len(responses)} requests, {len(items)} items")
+    return items, {"requests": len(responses), "queries": len(queries)}
 
 
-# -----------------------------------------------------------------------------
-# StackOverflow / StackExchange (key optional but recommended)
-# -----------------------------------------------------------------------------
-
-
+# StackOverflow
 async def _collect_stackoverflow(
-    date: str,
-    apis,
-    http,
-    context,
+    date: str, apis, http, context
 ) -> Tuple[List[Dict], Dict]:
     from_ts, to_ts = iso_date_to_utc_bounds(date)
-    req_count = 0
-
-    # Get tags from keywords
     tags = build_stackoverflow_tags()
+    key = getattr(apis, "stackexchange_key", None)
 
-    # StackExchange max is 100
-    stackexchange_key = getattr(apis, "stackexchange_key", None)
-
-    # Calculate and log plan before making requests
-    max_pages = 10
-    estimated_requests = max_pages
-    context.log.info(
-        f"StackOverflow collection plan: {max_pages} pages = {estimated_requests} requests max"
-    )
+    context.log.info("StackOverflow: 10 pages")
 
     async def fetch_page(page: int):
-        nonlocal req_count
-        req_count += 1
-
         params = {
             "fromdate": from_ts,
             "todate": to_ts,
             "site": "stackoverflow",
             "pagesize": 100,
             "page": page,
-            # includes body (as HTML)
             "filter": "withbody",
         }
         if tags:
             params["tagged"] = ";".join(tags)
-        if stackexchange_key:
-            params["key"] = stackexchange_key
+        if key:
+            params["key"] = key
 
         resp = await http.request_with_retry_async(
-            "GET",
-            "https://api.stackexchange.com/2.3/questions",
-            params=params,
+            "GET", "https://api.stackexchange.com/2.3/questions", params=params
         )
         return resp.json().get("items", [])
 
     pages = await asyncio.gather(*[fetch_page(p) for p in range(1, 11)])
-    items: List[Dict] = []
+
+    items = []
     for page_items in pages:
         for it in page_items:
             title = it.get("title") or ""
             body = it.get("body_markdown") or it.get("body") or ""
-            combined_text = f"{title} {body}".lower()
 
-            # Filter by keywords
-            if not matches_keywords(combined_text, source="stackoverflow"):
-                continue
+            if matches_keywords(f"{title} {body}".lower(), source="stackoverflow"):
+                created = it.get("creation_date")
+                items.append(
+                    {
+                        "url": it.get("link") or "",
+                        "title": title,
+                        "body": body[:BODY_MAX_LENGTH],
+                        "created_at": (
+                            datetime.fromtimestamp(
+                                int(created), tz=timezone.utc
+                            ).isoformat()
+                            if created
+                            else ""
+                        ),
+                    }
+                )
 
-            created = it.get("creation_date")
-            created_iso = (
-                datetime.fromtimestamp(int(created), tz=timezone.utc).isoformat()
-                if created
-                else ""
-            )
-            items.append(
-                {
-                    "url": it.get("link") or "",
-                    "title": title,
-                    # withbody uses "body" (HTML). Some responses include body_markdown depending on filters.
-                    "body": body[:BODY_MAX_LENGTH],
-                    "created_at": created_iso,
-                }
-            )
-
-    context.log.info(
-        f"StackOverflow collection completed: {req_count} requests made, {len(items)} items collected"
-    )
-    meta = {"requests": req_count, "used_key": bool(stackexchange_key)}
-    return items, meta
+    context.log.info(f"StackOverflow: 10 requests, {len(items)} items")
+    return items, {"requests": 10, "used_key": bool(key)}
 
 
-# -----------------------------------------------------------------------------
-# Reddit (prefer OAuth if credentials provided; fallback to public endpoints)
-# -----------------------------------------------------------------------------
-
-
-async def _collect_reddit(
-    date: str,
-    apis,
-    http,
-    context,
-) -> Tuple[List[Dict], Dict]:
+# Reddit
+async def _collect_reddit(date: str, apis, http, context) -> Tuple[List[Dict], Dict]:
     from_ts, to_ts = iso_date_to_utc_bounds(date)
+    client_id = getattr(apis, "reddit_client_id", None)
+    client_secret = getattr(apis, "reddit_client_secret", None)
+    user_agent = getattr(apis, "reddit_user_agent", "BurningDemand/0.1")
+
+    # Get OAuth token if credentials provided
+    token = None
     req_count = 0
-    subs = REDDIT_SUBREDDITS
-    reddit_client_id = getattr(apis, "reddit_client_id", None)
-    reddit_client_secret = getattr(apis, "reddit_client_secret", None)
-    reddit_user_agent = getattr(apis, "reddit_user_agent", "BurningDemand/0.1")
-    limit = 100
 
-    # Calculate and log plan before making requests
-    oauth_request = 1 if (reddit_client_id and reddit_client_secret) else 0
-    subreddit_requests = len(subs)
-    estimated_requests = oauth_request + subreddit_requests
-    context.log.info(
-        f"Reddit collection plan: {len(subs)} subreddits + {oauth_request} OAuth token = {estimated_requests} requests"
-    )
-
-    async def get_oauth_token() -> Optional[str]:
-        """
-        If client_id/secret are set, use installed-app script flow to fetch an app token.
-        """
-        nonlocal req_count
-        if not reddit_client_id or not reddit_client_secret:
-            return None
-
+    if client_id and client_secret:
         req_count += 1
-        auth = (reddit_client_id, reddit_client_secret)
         resp = await http.request_with_retry_async(
             "POST",
             "https://www.reddit.com/api/v1/access_token",
-            auth=auth,
+            auth=(client_id, client_secret),
             data={"grant_type": "client_credentials"},
-            headers={"User-Agent": reddit_user_agent},
+            headers={"User-Agent": user_agent},
         )
-        data = resp.json()
-        return data.get("access_token")
+        token = resp.json().get("access_token")
 
-    token = await get_oauth_token()
-
-    # Choose endpoint + headers
+    base = "https://oauth.reddit.com" if token else "https://api.reddit.com"
+    headers = {"User-Agent": user_agent}
     if token:
-        base = "https://oauth.reddit.com"
-        headers = {"Authorization": f"bearer {token}", "User-Agent": reddit_user_agent}
-        auth_mode = "oauth"
-    else:
-        base = "https://api.reddit.com"
-        headers = {"User-Agent": reddit_user_agent}
-        auth_mode = "public"
+        headers["Authorization"] = f"bearer {token}"
+
+    context.log.info(
+        f"Reddit: {len(REDDIT_SUBREDDITS)} subreddits, {'OAuth' if token else 'public'}"
+    )
 
     async def fetch_sub(sub: str):
         nonlocal req_count
         req_count += 1
         resp = await http.request_with_retry_async(
-            "GET",
-            f"{base}/r/{sub}/new",
-            params={"limit": limit},
-            headers=headers,
+            "GET", f"{base}/r/{sub}/new", params={"limit": 100}, headers=headers
         )
         return resp.json().get("data", {}).get("children", [])
 
-    results = await asyncio.gather(*[fetch_sub(s) for s in subs])
+    results = await asyncio.gather(*[fetch_sub(s) for s in REDDIT_SUBREDDITS])
 
-    items: List[Dict] = []
+    items = []
     for children in results:
         for ch in children:
             d = ch.get("data") or {}
             created = int(d.get("created_utc") or 0)
+
             if from_ts <= created < to_ts:
                 title = d.get("title") or ""
                 body = d.get("selftext") or ""
-                combined_text = f"{title} {body}".lower()
 
-                # Filter by keywords
-                if not matches_keywords(combined_text, source="reddit"):
-                    continue
+                if matches_keywords(f"{title} {body}".lower(), source="reddit"):
+                    items.append(
+                        {
+                            "url": f"https://reddit.com{d.get('permalink','')}",
+                            "title": title,
+                            "body": body[:BODY_MAX_LENGTH],
+                            "created_at": datetime.fromtimestamp(
+                                created, tz=timezone.utc
+                            ).isoformat(),
+                        }
+                    )
 
-                items.append(
-                    {
-                        "url": f"https://reddit.com{d.get('permalink','')}",
-                        "title": title,
-                        "body": body[:BODY_MAX_LENGTH],
-                        "created_at": datetime.fromtimestamp(
-                            created, tz=timezone.utc
-                        ).isoformat(),
-                    }
-                )
-
-    context.log.info(
-        f"Reddit collection completed: {req_count} requests made, {len(items)} items collected"
-    )
-    meta = {
+    context.log.info(f"Reddit: {req_count} requests, {len(items)} items")
+    return items, {
         "requests": req_count,
-        "subs": subs,
-        "auth_mode": auth_mode,
+        "subs": REDDIT_SUBREDDITS,
         "used_oauth": bool(token),
     }
-    return items, meta
 
 
-# -----------------------------------------------------------------------------
-# HackerNews (Algolia API; no token)
-# -----------------------------------------------------------------------------
-
-
+# HackerNews
 async def _collect_hackernews(
-    date: str,
-    apis,
-    http,
-    context,
+    date: str, apis, http, context
 ) -> Tuple[List[Dict], Dict]:
     from_ts, to_ts = iso_date_to_utc_bounds(date)
-    req_count = 0
 
-    # Calculate and log plan before making requests
-    max_pages = 10
-    estimated_requests = max_pages
-    context.log.info(
-        f"HackerNews collection plan: {max_pages} pages = {estimated_requests} requests max"
-    )
+    context.log.info("HackerNews: 10 pages")
 
     async def fetch_page(page: int):
-        nonlocal req_count
-        req_count += 1
         resp = await http.request_with_retry_async(
             "GET",
             "https://hn.algolia.com/api/v1/search_by_date",
@@ -398,38 +232,31 @@ async def _collect_hackernews(
         )
         return resp.json().get("hits", [])
 
-    pages = await asyncio.gather(*[fetch_page(p) for p in range(0, 10)])
+    pages = await asyncio.gather(*[fetch_page(p) for p in range(10)])
 
-    items: List[Dict] = []
+    items = []
     for hits in pages:
         for it in hits:
             title = it.get("title") or ""
             body = it.get("story_text") or ""
-            combined_text = f"{title} {body}".lower()
 
-            # Filter by keywords
-            if not matches_keywords(combined_text, source="hackernews"):
-                continue
+            if matches_keywords(f"{title} {body}".lower(), source="hackernews"):
+                created_i = int(it.get("created_at_i") or 0)
+                items.append(
+                    {
+                        "url": it.get("url")
+                        or f"https://news.ycombinator.com/item?id={it.get('objectID')}",
+                        "title": title,
+                        "body": body[:BODY_MAX_LENGTH],
+                        "created_at": (
+                            datetime.fromtimestamp(
+                                created_i, tz=timezone.utc
+                            ).isoformat()
+                            if created_i
+                            else ""
+                        ),
+                    }
+                )
 
-            url = (
-                it.get("url")
-                or f"https://news.ycombinator.com/item?id={it.get('objectID')}"
-            )
-            created_i = int(it.get("created_at_i") or 0)
-            items.append(
-                {
-                    "url": url,
-                    "title": title,
-                    "body": body[:BODY_MAX_LENGTH],
-                    "created_at": (
-                        datetime.fromtimestamp(created_i, tz=timezone.utc).isoformat()
-                        if created_i
-                        else ""
-                    ),
-                }
-            )
-
-    context.log.info(
-        f"HackerNews collection completed: {req_count} requests made, {len(items)} items collected"
-    )
-    return items, {"requests": req_count}
+    context.log.info(f"HackerNews: 10 requests, {len(items)} items")
+    return items, {"requests": 10}

@@ -12,6 +12,7 @@ dependencies = [
     "pyyaml",
     "python-dotenv",
     "aiolimiter",
+    "tenacity",
 ]
 name = "obp-dagster"
 requires-python = ">=3.10,<3.15"
