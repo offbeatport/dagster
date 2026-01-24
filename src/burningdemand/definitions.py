@@ -13,7 +13,7 @@ if env_path.exists():
 from . import assets as assets_pkg
 
 from .resources.anthropic_resource import AnthropicResource
-from .resources.collectors_resource import CollectorsResource
+from .resources.collectors.collectors_resource import CollectorsResource
 from .resources.duckdb_resource import DuckDBResource
 from .resources.embedding_resource import EmbeddingResource
 from .resources.pocketbase_resource import PocketBaseResource

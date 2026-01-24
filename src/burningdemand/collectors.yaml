@@ -1,17 +1,54 @@
-# burningdemand_dagster/config.yaml
+# burningdemand_dagster/collectors.yaml
 # Configuration for data collection
 
-# Reddit subreddits to monitor
+github:
+  extra_keywords:
+    - "feature request"
+    - "enhancement"
+    - "performance"
+    - "scalability"
+    - "timeout"
+    - "memory leak"
+    - "integration"
+
 reddit:
+  extra_keywords:
+    - "entrepreneur"
+    - "SaaS"
+    - "startups"
   subreddits:
     - "entrepreneur"
     - "SaaS"
     - "startups"
 
-keywords:
-  # Keywords for discovering people who would pay for SaaS tools.
-  # Rule: if a post matches ANY of these terms, we keep it.
-  core:
+stackoverflow:
+  tags:
+    - "python"
+    - "javascript"
+    - "typescript"
+    - "java"
+    - "go"
+    - "docker"
+    - "kubernetes"
+    - "aws"
+    - "postgresql"
+  extra_keywords:
+    - "best practice"
+    - "production"
+    - "scaling"
+    - "monitoring"
+
+hackernews:
+  extra_keywords:
+    - "startup"
+    - "saas"
+    - "tool"
+    - "platform"
+    - "automation"
+    - "analytics"
+
+all:
+  keywords:
     # ---- Strong buying / switching intent ----
     - "looking for"
     - "any recommendations"
@@ -85,50 +122,3 @@ keywords:
     - "internal tool"
     - "ops"
     - "devops"
-
-  sources:
-    github:
-      extra:
-        - "feature request"
-        - "enhancement"
-        - "performance"
-        - "scalability"
-        - "timeout"
-        - "memory leak"
-        - "integration"
-
-    stackoverflow:
-      tags:
-        - "python"
-        - "javascript"
-        - "typescript"
-        - "java"
-        - "go"
-        - "docker"
-        - "kubernetes"
-        - "aws"
-        - "postgresql"
-      extra:
-        - "best practice"
-        - "production"
-        - "scaling"
-        - "monitoring"
-
-    reddit:
-      extra:
-        - "what are you using"
-        - "any good tool"
-        - "any recommendations"
-        - "how do you manage"
-        - "how do you automate"
-        - "what software"
-        - "what platform"
-
-    hackernews:
-      extra:
-        - "startup"
-        - "saas"
-        - "tool"
-        - "platform"
-        - "automation"
-        - "analytics"

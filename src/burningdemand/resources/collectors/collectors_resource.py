@@ -5,14 +5,9 @@ from typing import Dict, List, Optional, Tuple
 
 import httpx
 from dagster import AssetExecutionContext, ConfigurableResource, EnvVar
-from pydantic import Field
 
-from ..utils.http import batch_requests, create_async_client, request_with_retry_async
-from ..utils.keywords import (
-    build_stackoverflow_tags,
-    get_reddit_subreddits,
-    matches_keywords,
-)
+from .collectors_config import get_keywords, get_subreddits, get_tags, matches_keywords
+from ..utils.http import batch_requests, create_async_client, request_async
 from ..utils.url import iso_date_to_utc_bounds
 
 BODY_MAX_LENGTH = 10 * 1000  # 10KB
@@ -33,7 +28,14 @@ class CollectorsResource(ConfigurableResource):
 
     def setup_for_execution(self, context) -> None:
         self._context = context
-        self._client = create_async_client()
+        # HTTP client configuration (hardcoded in resource)
+        self._client = create_async_client(
+            timeout=30.0,
+            user_agent="BurningDemand/0.1",
+        )
+        self._rate_limits = {"api.github.com": 30}
+        self._retryable = {429, 500, 502, 503, 504}
+
 
     def teardown_after_execution(self, context) -> None:
         try:
@@ -61,10 +63,8 @@ class CollectorsResource(ConfigurableResource):
         return await collector(date)
 
     async def _collect_github(self, date: str) -> Tuple[List[Dict], Dict]:
-        from ..utils.keywords import get_source_keywords
-
         headers = {"Authorization": f"token {self.github_token}"}
-        keywords = get_source_keywords("github")
+        keywords = get_keywords("github")
 
         # Split into chunks of 6 keywords (5 OR operators max)
         queries = []
@@ -86,7 +86,11 @@ class CollectorsResource(ConfigurableResource):
         ]
 
         responses = await batch_requests(
-            self._client, self._context, specs, "api.github.com"
+            self._client,
+            self._context,
+            specs,
+            rate_limits=self._rate_limits,
+            retryable=self._retryable,
         )
 
         seen = set()
@@ -101,7 +105,7 @@ class CollectorsResource(ConfigurableResource):
                 title = it.get("title") or ""
                 body = it.get("body") or ""
 
-                if matches_keywords(f"{title} {body}".lower(), source="github"):
+                if matches_keywords(f"{title} {body}", "github"):
                     seen.add(url)
                     items.append(
                         {
@@ -117,7 +121,7 @@ class CollectorsResource(ConfigurableResource):
 
     async def _collect_stackoverflow(self, date: str) -> Tuple[List[Dict], Dict]:
         from_ts, to_ts = iso_date_to_utc_bounds(date)
-        tags = build_stackoverflow_tags()
+        tags = get_tags("stackoverflow")
         key = self.stackexchange_key
 
         self._context.log.info("StackOverflow: 10 pages")
@@ -136,12 +140,14 @@ class CollectorsResource(ConfigurableResource):
             if key:
                 params["key"] = key
 
-            resp = await request_with_retry_async(
+            resp = await request_async(
                 self._client,
                 self._context,
                 "GET",
                 "https://api.stackexchange.com/2.3/questions",
                 params=params,
+                rate_limits=self._rate_limits,
+                retryable=self._retryable,
             )
             return resp.json().get("items", [])
 
@@ -153,7 +159,7 @@ class CollectorsResource(ConfigurableResource):
                 title = it.get("title") or ""
                 body = it.get("body_markdown") or it.get("body") or ""
 
-                if matches_keywords(f"{title} {body}".lower(), source="stackoverflow"):
+                if matches_keywords(f"{title} {body}", "stackoverflow"):
                     created = it.get("creation_date")
                     items.append(
                         {
@@ -178,7 +184,7 @@ class CollectorsResource(ConfigurableResource):
         client_id = self.reddit_client_id
         client_secret = self.reddit_client_secret
         user_agent = "BurningDemand/0.1"
-        subreddits = get_reddit_subreddits()
+        subreddits = get_subreddits()
 
         # Get OAuth token if credentials provided
         token = None
@@ -186,7 +192,7 @@ class CollectorsResource(ConfigurableResource):
 
         if client_id and client_secret:
             req_count += 1
-            resp = await request_with_retry_async(
+            resp = await request_async(
                 self._client,
                 self._context,
                 "POST",
@@ -194,6 +200,8 @@ class CollectorsResource(ConfigurableResource):
                 auth=(client_id, client_secret),
                 data={"grant_type": "client_credentials"},
                 headers={"User-Agent": user_agent},
+                rate_limits=self._rate_limits,
+                retryable=self._retryable,
             )
             token = resp.json().get("access_token")
 
@@ -209,13 +217,15 @@ class CollectorsResource(ConfigurableResource):
         async def fetch_sub(sub: str):
             nonlocal req_count
             req_count += 1
-            resp = await request_with_retry_async(
+            resp = await request_async(
                 self._client,
                 self._context,
                 "GET",
                 f"{base}/r/{sub}/new",
                 params={"limit": 100},
                 headers=headers,
+                rate_limits=self._rate_limits,
+                retryable=self._retryable,
             )
             return resp.json().get("data", {}).get("children", [])
 
@@ -231,7 +241,7 @@ class CollectorsResource(ConfigurableResource):
                     title = d.get("title") or ""
                     body = d.get("selftext") or ""
 
-                    if matches_keywords(f"{title} {body}".lower(), source="reddit"):
+                    if matches_keywords(f"{title} {body}", "reddit"):
                         items.append(
                             {
                                 "url": f"https://reddit.com{d.get('permalink','')}",
@@ -256,7 +266,7 @@ class CollectorsResource(ConfigurableResource):
         self._context.log.info("HackerNews: 10 pages")
 
         async def fetch_page(page: int):
-            resp = await request_with_retry_async(
+            resp = await request_async(
                 self._client,
                 self._context,
                 "GET",
@@ -267,6 +277,8 @@ class CollectorsResource(ConfigurableResource):
                     "hitsPerPage": 100,
                     "page": page,
                 },
+                rate_limits=self._rate_limits,
+                retryable=self._retryable,
             )
             return resp.json().get("hits", [])
 
@@ -278,7 +290,7 @@ class CollectorsResource(ConfigurableResource):
                 title = it.get("title") or ""
                 body = it.get("story_text") or ""
 
-                if matches_keywords(f"{title} {body}".lower(), source="hackernews"):
+                if matches_keywords(f"{title} {body}", "hackernews"):
                     created_i = int(it.get("created_at_i") or 0)
                     items.append(
                         {

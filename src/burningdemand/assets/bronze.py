@@ -5,7 +5,7 @@ import pandas as pd
 from dagster import AssetExecutionContext, MaterializeResult, asset
 
 from ..partitions import source_day_partitions
-from ..resources.collectors_resource import CollectorsResource
+from ..resources.collectors.collectors_resource import CollectorsResource
 from ..resources.duckdb_resource import DuckDBResource
 from ..utils.url import normalize_url, url_hash
 
