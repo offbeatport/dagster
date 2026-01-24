@@ -9,13 +9,13 @@ _keywords_file_path: Optional[Path] = None
 
 
 def _get_keywords_file_path(keywords_file: Optional[str] = None) -> Path:
-    """Get the path to the keywords YAML file."""
+    """Get the path to the config YAML file."""
     if keywords_file:
         return Path(keywords_file)
 
-    # Default to keywords.yaml in the package directory
+    # Default to config.yaml in the package directory
     package_dir = Path(__file__).parent.parent
-    return package_dir / "keywords.yaml"
+    return package_dir / "config.yaml"
 
 
 def _load_keywords(keywords_file: Optional[str] = None) -> Dict:
@@ -90,3 +90,9 @@ def matches_keywords(
     )
 
     return any(keyword.lower() in text_lower for keyword in keywords)
+
+
+def get_reddit_subreddits(keywords_file: Optional[str] = None) -> List[str]:
+    """Get Reddit subreddits to monitor from config."""
+    keywords = _load_keywords(keywords_file)
+    return keywords.get("reddit", {}).get("subreddits", [])

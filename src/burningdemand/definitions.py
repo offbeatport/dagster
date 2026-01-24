@@ -12,10 +12,10 @@ if env_path.exists():
 
 from . import assets as assets_pkg
 
+from .resources.anthropic_resource import AnthropicResource
+from .resources.collectors_resource import CollectorsResource
 from .resources.duckdb_resource import DuckDBResource
 from .resources.embedding_resource import EmbeddingResource
-from .resources.app_config_resource import AppConfigResource
-from .resources.http_clients_resource import HTTPClientsResource
 from .resources.pocketbase_resource import PocketBaseResource
 
 all_assets = load_assets_from_package_module(assets_pkg)
@@ -25,8 +25,8 @@ defs = Definitions(
     resources={
         "db": DuckDBResource(),
         "embedding": EmbeddingResource(),
-        "apis": AppConfigResource(),
-        "http": HTTPClientsResource(),
+        "collector": CollectorsResource(),
+        "anthropic_api": AnthropicResource(),
         "pb": PocketBaseResource.from_env(),
     },
 )

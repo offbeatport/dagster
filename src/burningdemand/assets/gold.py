@@ -5,8 +5,8 @@ import anthropic
 from dagster import AssetExecutionContext, MaterializeResult, MetadataValue, asset
 
 from ..partitions import daily_partitions
+from ..resources.anthropic_resource import AnthropicResource
 from ..resources.duckdb_resource import DuckDBResource
-from ..resources.app_config_resource import AppConfigResource
 from ..resources.pocketbase_resource import PocketBaseResource
 from ..utils.llm_schema import IssueLabel, extract_first_json_obj
 
@@ -22,10 +22,10 @@ _SOURCE_TYPE_MAP = {
 async def gold_issues(
     context: AssetExecutionContext,
     db: DuckDBResource,
-    apis: AppConfigResource,
+    anthropic_api: AnthropicResource,
 ) -> MaterializeResult:
     date = context.partition_key
-    client = anthropic.AsyncAnthropic(api_key=apis.anthropic_api_key)
+    client = anthropic.AsyncAnthropic(api_key=anthropic_api.api_key)
 
     unlabeled = db.query_df(
         """

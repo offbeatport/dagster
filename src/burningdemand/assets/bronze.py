@@ -1,11 +1,12 @@
 import pandas as pd
 from dagster import AssetExecutionContext, MaterializeResult, asset
 
+import pandas as pd
+from dagster import AssetExecutionContext, MaterializeResult, asset
+
 from ..partitions import source_day_partitions
+from ..resources.collectors_resource import CollectorsResource
 from ..resources.duckdb_resource import DuckDBResource
-from ..resources.app_config_resource import AppConfigResource
-from ..resources.http_clients_resource import HTTPClientsResource
-from ..utils.collectors import collect_source_async
 from ..utils.url import normalize_url, url_hash
 
 
@@ -13,13 +14,12 @@ from ..utils.url import normalize_url, url_hash
 async def bronze_raw_items(
     context: AssetExecutionContext,
     db: DuckDBResource,
-    apis: AppConfigResource,
-    http: HTTPClientsResource,
+    collector: CollectorsResource,
 ) -> MaterializeResult:
     source = context.partition_key.keys_by_dimension["source"]
     date = context.partition_key.keys_by_dimension["date"]
 
-    items, meta = await collect_source_async(source, date, apis, http, context)
+    items, meta = await collector.collect(source, date)
 
     if not items:
         return MaterializeResult(
