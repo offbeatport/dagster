@@ -1,0 +1,16 @@
+[32m2026-01-24 08:52:59 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 34204cff-e820-47fb-a468-d8fbc103810c - 96335 - LOGS_CAPTURED - Started capturing logs in process (pid: 96335).
+[32m2026-01-24 08:52:59 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 34204cff-e820-47fb-a468-d8fbc103810c - 96335 - bronze_raw_items - STEP_START - Started execution of step "bronze_raw_items".
+[32m2026-01-24 08:52:59 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - Executing 120 requests with automatic rate limiting
+[32m2026-01-24 08:52:59 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - Max concurrent requests: 29 (rate limit: 30 per 60.0 seconds)
+[32m2026-01-24 08:52:59 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - Executing batch 1 of 4 (30 requests)
+[32m2026-01-24 08:53:03 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - Waiting 60.0 seconds before next batch to respect rate limit...
+[32m2026-01-24 08:54:03 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - Executing batch 2 of 4 (30 requests)
+[32m2026-01-24 08:54:06 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - Waiting 60.0 seconds before next batch to respect rate limit...
+[32m2026-01-24 08:55:06 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - Executing batch 3 of 4 (30 requests)
+[32m2026-01-24 08:55:10 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - Waiting 60.0 seconds before next batch to respect rate limit...
+[32m2026-01-24 08:56:10 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - Executing batch 4 of 4 (30 requests)
+[32m2026-01-24 08:56:16 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - Completed all 120 requests
+[32m2026-01-24 08:56:17 +0000[0m - dagster - [34mINFO[0m - resource:collector - 34204cff-e820-47fb-a468-d8fbc103810c - bronze_raw_items - GitHub: 120 requests, 8362 items
+[32m2026-01-24 08:56:17 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 34204cff-e820-47fb-a468-d8fbc103810c - 96335 - bronze_raw_items - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+[32m2026-01-24 08:56:17 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 34204cff-e820-47fb-a468-d8fbc103810c - 96335 - bronze_raw_items - ASSET_MATERIALIZATION - Materialized value bronze_raw_items.
+[32m2026-01-24 08:56:17 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 34204cff-e820-47fb-a468-d8fbc103810c - 96335 - bronze_raw_items - STEP_SUCCESS - Finished execution of step "bronze_raw_items" in 3m18s.

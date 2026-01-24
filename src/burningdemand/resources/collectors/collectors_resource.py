@@ -1,16 +1,24 @@
 import asyncio
 import os
+import time
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 
-import httpx
-from dagster import AssetExecutionContext, ConfigurableResource, EnvVar
+from dagster import ConfigurableResource, EnvVar
 
-from .collectors_config import get_keywords, get_subreddits, get_tags, matches_keywords
-from ..utils.http import batch_requests, create_async_client, request_async
-from ..utils.url import iso_date_to_utc_bounds
+from .collector_queries import (
+    get_body_max_length,
+    get_query_keywords,
+    get_query_subreddits,
+    get_query_tags,
+    matches_query_keywords,
+)
+from burningdemand.utils.http import batch_requests, create_async_client, request_async
+from burningdemand.utils.url import iso_date_to_utc_bounds
 
-BODY_MAX_LENGTH = 10 * 1000  # 10KB
+# Track last execution time per source to enforce delays between partitions
+_last_execution_time: Dict[str, float] = {}
+_execution_lock = asyncio.Lock()
 
 
 class CollectorsResource(ConfigurableResource):
@@ -34,12 +42,12 @@ class CollectorsResource(ConfigurableResource):
             user_agent="BurningDemand/0.1",
         )
         self._rate_limits = {"api.github.com": 30}
-        self._retryable = {429, 500, 502, 503, 504}
-
 
     def teardown_after_execution(self, context) -> None:
         try:
-            asyncio.create_task(self._client.aclose())
+            # Properly await the async close
+            if hasattr(self, "_client"):
+                asyncio.run(self._client.aclose())
         except:
             pass
 
@@ -49,6 +57,20 @@ class CollectorsResource(ConfigurableResource):
         date: str,
     ) -> Tuple[List[Dict], Dict]:
         """Collect items for a single (source, date) partition."""
+        # Enforce delay between partition materializations (30 seconds)
+        async with _execution_lock:
+            global _last_execution_time
+            current_time = time.time()
+            if source in _last_execution_time:
+                time_since_last = current_time - _last_execution_time[source]
+                if time_since_last < 30.0:
+                    wait_time = 30.0 - time_since_last
+                    self._context.log.info(
+                        f"Waiting {wait_time:.1f} seconds before processing {source} partition to respect rate limits..."
+                    )
+                    await asyncio.sleep(wait_time)
+            _last_execution_time[source] = time.time()
+
         collectors = {
             "github": self._collect_github,
             "stackoverflow": self._collect_stackoverflow,
@@ -64,7 +86,7 @@ class CollectorsResource(ConfigurableResource):
 
     async def _collect_github(self, date: str) -> Tuple[List[Dict], Dict]:
         headers = {"Authorization": f"token {self.github_token}"}
-        keywords = get_keywords("github")
+        keywords = get_query_keywords("github")
 
         # Split into chunks of 6 keywords (5 OR operators max)
         queries = []
@@ -90,7 +112,6 @@ class CollectorsResource(ConfigurableResource):
             self._context,
             specs,
             rate_limits=self._rate_limits,
-            retryable=self._retryable,
         )
 
         seen = set()
@@ -105,13 +126,13 @@ class CollectorsResource(ConfigurableResource):
                 title = it.get("title") or ""
                 body = it.get("body") or ""
 
-                if matches_keywords(f"{title} {body}", "github"):
+                if matches_query_keywords(f"{title} {body}", "github"):
                     seen.add(url)
                     items.append(
                         {
                             "url": url,
                             "title": title,
-                            "body": body[:BODY_MAX_LENGTH],
+                            "body": body[:get_body_max_length()],
                             "created_at": it.get("created_at") or "",
                         }
                     )
@@ -121,7 +142,7 @@ class CollectorsResource(ConfigurableResource):
 
     async def _collect_stackoverflow(self, date: str) -> Tuple[List[Dict], Dict]:
         from_ts, to_ts = iso_date_to_utc_bounds(date)
-        tags = get_tags("stackoverflow")
+        tags = get_query_tags("stackoverflow")
         key = self.stackexchange_key
 
         self._context.log.info("StackOverflow: 10 pages")
@@ -147,7 +168,6 @@ class CollectorsResource(ConfigurableResource):
                 "https://api.stackexchange.com/2.3/questions",
                 params=params,
                 rate_limits=self._rate_limits,
-                retryable=self._retryable,
             )
             return resp.json().get("items", [])
 
@@ -159,13 +179,13 @@ class CollectorsResource(ConfigurableResource):
                 title = it.get("title") or ""
                 body = it.get("body_markdown") or it.get("body") or ""
 
-                if matches_keywords(f"{title} {body}", "stackoverflow"):
+                if matches_query_keywords(f"{title} {body}", "stackoverflow"):
                     created = it.get("creation_date")
                     items.append(
                         {
                             "url": it.get("link") or "",
                             "title": title,
-                            "body": body[:BODY_MAX_LENGTH],
+                            "body": body[:get_body_max_length()],
                             "created_at": (
                                 datetime.fromtimestamp(
                                     int(created), tz=timezone.utc
@@ -184,7 +204,7 @@ class CollectorsResource(ConfigurableResource):
         client_id = self.reddit_client_id
         client_secret = self.reddit_client_secret
         user_agent = "BurningDemand/0.1"
-        subreddits = get_subreddits()
+        subreddits = get_query_subreddits()
 
         # Get OAuth token if credentials provided
         token = None
@@ -201,7 +221,6 @@ class CollectorsResource(ConfigurableResource):
                 data={"grant_type": "client_credentials"},
                 headers={"User-Agent": user_agent},
                 rate_limits=self._rate_limits,
-                retryable=self._retryable,
             )
             token = resp.json().get("access_token")
 
@@ -225,7 +244,6 @@ class CollectorsResource(ConfigurableResource):
                 params={"limit": 100},
                 headers=headers,
                 rate_limits=self._rate_limits,
-                retryable=self._retryable,
             )
             return resp.json().get("data", {}).get("children", [])
 
@@ -241,12 +259,12 @@ class CollectorsResource(ConfigurableResource):
                     title = d.get("title") or ""
                     body = d.get("selftext") or ""
 
-                    if matches_keywords(f"{title} {body}", "reddit"):
+                    if matches_query_keywords(f"{title} {body}", "reddit"):
                         items.append(
                             {
                                 "url": f"https://reddit.com{d.get('permalink','')}",
                                 "title": title,
-                                "body": body[:BODY_MAX_LENGTH],
+                                "body": body[:get_body_max_length()],
                                 "created_at": datetime.fromtimestamp(
                                     created, tz=timezone.utc
                                 ).isoformat(),
@@ -278,7 +296,6 @@ class CollectorsResource(ConfigurableResource):
                     "page": page,
                 },
                 rate_limits=self._rate_limits,
-                retryable=self._retryable,
             )
             return resp.json().get("hits", [])
 
@@ -290,14 +307,14 @@ class CollectorsResource(ConfigurableResource):
                 title = it.get("title") or ""
                 body = it.get("story_text") or ""
 
-                if matches_keywords(f"{title} {body}", "hackernews"):
+                if matches_query_keywords(f"{title} {body}", "hackernews"):
                     created_i = int(it.get("created_at_i") or 0)
                     items.append(
                         {
                             "url": it.get("url")
                             or f"https://news.ycombinator.com/item?id={it.get('objectID')}",
                             "title": title,
-                            "body": body[:BODY_MAX_LENGTH],
+                            "body": body[:get_body_max_length()],
                             "created_at": (
                                 datetime.fromtimestamp(
                                     created_i, tz=timezone.utc

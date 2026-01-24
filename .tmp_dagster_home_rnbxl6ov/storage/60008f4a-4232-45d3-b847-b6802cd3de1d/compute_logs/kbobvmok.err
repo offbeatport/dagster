@@ -1,0 +1,56 @@
+[32m2026-01-24 08:51:48 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 60008f4a-4232-45d3-b847-b6802cd3de1d - 94651 - LOGS_CAPTURED - Started capturing logs in process (pid: 94651).
+[32m2026-01-24 08:51:48 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 60008f4a-4232-45d3-b847-b6802cd3de1d - 94651 - bronze_raw_items - STEP_START - Started execution of step "bronze_raw_items".
+[32m2026-01-24 08:51:48 +0000[0m - dagster - [34mINFO[0m - resource:collector - 60008f4a-4232-45d3-b847-b6802cd3de1d - bronze_raw_items - Executing 120 requests with automatic rate limiting
+[32m2026-01-24 08:51:48 +0000[0m - dagster - [34mINFO[0m - resource:collector - 60008f4a-4232-45d3-b847-b6802cd3de1d - bronze_raw_items - Max concurrent requests: 29 (rate limit: 30 per 60.0 seconds)
+[32m2026-01-24 08:51:48 +0000[0m - dagster - [34mINFO[0m - resource:collector - 60008f4a-4232-45d3-b847-b6802cd3de1d - bronze_raw_items - Executing batch 1 of 4 (30 requests)
+[32m2026-01-24 08:51:48 +0000[0m - dagster - [34mERROR[0m - [31mresource:collector - 60008f4a-4232-45d3-b847-b6802cd3de1d - bronze_raw_items - HTTP 403 GET https://api.github.com/search/issues
+Headers: {'date': 'Sat, 24 Jan 2026 08:51:48 GMT', 'content-type': 'application/json; charset=utf-8', 'x-ratelimit-limit': '30', 'x-ratelimit-remaining': '0', 'x-ratelimit-reset': '1769244746', 'x-ratelimit-used': '30', 'x-ratelimit-resource': 'search', 'x-github-media-type': 'github.v3; format=json', 'access-control-expose-headers': 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset', 'access-control-allow-origin': '*', 'strict-transport-security': 'max-age=31536000; includeSubdomains; preload', 'x-frame-options': 'deny', 'x-content-type-options': 'nosniff', 'x-xss-protection': '0', 'referrer-policy': 'origin-when-cross-origin, strict-origin-when-cross-origin', 'content-security-policy': "default-src 'none'", 'vary': 'Accept-Encoding, Accept, X-Requested-With', 'content-encoding': 'gzip', 'transfer-encoding': 'chunked', 'server': 'github.com', 'x-github-request-id': 'DD76:36D0B8:1232C5A:1526921:69748824'}
+Body: {"message":"API rate limit exceeded for user ID 186800377. If you reach out to GitHub Support for help, please include the request ID DD76:36D0B8:1232C5A:1526921:69748824 and timestamp 2026-01-24 08:51:48 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service)","documentation_url":"https://docs.github.com/rest/overview/rate-limits-for-the-rest-api","status":"403"}[0m
+[32m2026-01-24 08:51:48 +0000[0m - dagster - [34mERROR[0m - [31mresource:collector - 60008f4a-4232-45d3-b847-b6802cd3de1d - bronze_raw_items - HTTP 403 GET https://api.github.com/search/issues
+Headers: {'date': 'Sat, 24 Jan 2026 08:51:48 GMT', 'content-type': 'application/json; charset=utf-8', 'x-ratelimit-limit': '30', 'x-ratelimit-remaining': '0', 'x-ratelimit-reset': '1769244746', 'x-ratelimit-used': '30', 'x-ratelimit-resource': 'search', 'x-github-media-type': 'github.v3; format=json', 'access-control-expose-headers': 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset', 'access-control-allow-origin': '*', 'strict-transport-security': 'max-age=31536000; includeSubdomains; preload', 'x-frame-options': 'deny', 'x-content-type-options': 'nosniff', 'x-xss-protection': '0', 'referrer-policy': 'origin-when-cross-origin, strict-origin-when-cross-origin', 'content-security-policy': "default-src 'none'", 'vary': 'Accept-Encoding, Accept, X-Requested-With', 'content-encoding': 'gzip', 'transfer-encoding': 'chunked', 'server': 'github.com', 'x-github-request-id': 'DFBC:259D6E:11D6E65:14CAA5B:69748824'}
+Body: {"message":"API rate limit exceeded for user ID 186800377. If you reach out to GitHub Support for help, please include the request ID DFBC:259D6E:11D6E65:14CAA5B:69748824 and timestamp 2026-01-24 08:51:48 UTC. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service)","documentation_url":"https://docs.github.com/rest/overview/rate-limits-for-the-rest-api","status":"403"}[0m
+[32m2026-01-24 08:51:48 +0000[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - 60008f4a-4232-45d3-b847-b6802cd3de1d - 94651 - bronze_raw_items - STEP_FAILURE - Execution of step "bronze_raw_items" failed.
+
+dagster._core.errors.DagsterExecutionStepExecutionError: Error occurred while executing op "bronze_raw_items"::
+
+httpx.HTTPStatusError: Client error '403 Forbidden' for url 'https://api.github.com/search/issues?q=is%3Aissue+created%3A2026-01-23+%28%22looking+for%22+OR+%22any+recommendations%22+OR+%22recommend+a+tool%22+OR+%22what+tool+do+you+use%22+OR+%22alternatives+to%22+OR+%22alternative+to%22%29&per_page=100&page=4'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+
+Stack Trace:
+  File "/Users/vladpalos/Development/obp-dagster/.venv/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 57, in op_execution_error_boundary
+    yield
+  File "/Users/vladpalos/Development/obp-dagster/.venv/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 394, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/.venv/lib/python3.11/site-packages/dagster/_core/execution/plan/compute.py", line 129, in gen_from_async_gen
+    yield context.event_loop.run_until_complete(async_gen.__anext__())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/.local/share/mise/installs/python/3.11.12/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/.venv/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 89, in _coerce_async_op_to_async_gen
+    result = await awaitable
+             ^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/assets/bronze.py", line 22, in bronze_raw_items
+    items, meta = await collector.collect(source, date)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/resources/collectors/collectors_resource.py", line 62, in collect
+    return await collector(date)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/resources/collectors/collectors_resource.py", line 87, in _collect_github
+    responses = await batch_requests(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/utils/http.py", line 138, in batch_requests
+    batch_results = await asyncio.gather(*[bounded_request(r) for r in batch_requests_list])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/utils/http.py", line 134, in bounded_request
+    return await request_async(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/utils/http.py", line 74, in request_async
+    return await _request(client, method, url, rate_limits, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/utils/http.py", line 58, in _request
+    resp.raise_for_status()
+  File "/Users/vladpalos/Development/obp-dagster/.venv/lib/python3.11/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+[0m
