@@ -1,17 +1,15 @@
 # burningdemand_dagster/assets/clusters.py
 import pandas as pd
 import numpy as np
-from dagster import AssetExecutionContext, MaterializeResult, asset
+from dagster import AssetExecutionContext, AssetKey, MaterializeResult, asset
 
 from burningdemand.partitions import daily_partitions
 from burningdemand.resources.duckdb_resource import DuckDBResource
-from burningdemand.assets.silver.embeddings import embeddings
 
 
 @asset(
     partitions_def=daily_partitions,
-    group_name="silver",
-    deps=["embeddings"],
+    deps=[AssetKey(["silver", "embeddings"])],
 )
 def clusters(
     context: AssetExecutionContext,

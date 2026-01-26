@@ -1,6 +1,5 @@
 import asyncio
 import os
-import time
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 
@@ -16,10 +15,6 @@ from .collector_queries import (
 )
 from burningdemand.utils.http import batch_requests, create_async_client, request_async
 from burningdemand.utils.url import iso_date_to_utc_bounds
-
-# Track last execution time per source to enforce delays between partitions
-_last_execution_time: Dict[str, float] = {}
-_execution_lock = asyncio.Lock()
 
 
 class CollectorsResource(ConfigurableResource):
@@ -37,12 +32,11 @@ class CollectorsResource(ConfigurableResource):
 
     def setup_for_execution(self, context) -> None:
         self._context = context
-        # HTTP client configuration (hardcoded in resource)
+        # HTTP client configuration
         self._client = create_async_client(
             timeout=30.0,
             user_agent="BurningDemand/0.1",
         )
-        self._rate_limits = {"api.github.com": 30}
 
     def teardown_after_execution(self, context) -> None:
         try:
@@ -58,20 +52,6 @@ class CollectorsResource(ConfigurableResource):
         date: str,
     ) -> Tuple[List[Dict], Dict]:
         """Collect items for a single (source, date) partition."""
-        # Enforce delay between partition materializations (30 seconds)
-        async with _execution_lock:
-            global _last_execution_time
-            current_time = time.time()
-            if source in _last_execution_time:
-                time_since_last = current_time - _last_execution_time[source]
-                if time_since_last < 30.0:
-                    wait_time = 30.0 - time_since_last
-                    self._context.log.info(
-                        f"Waiting {wait_time:.1f} seconds before processing {source} partition to respect rate limits..."
-                    )
-                    await asyncio.sleep(wait_time)
-            _last_execution_time[source] = time.time()
-
         collectors = {
             "github": self._collect_github,
             "stackoverflow": self._collect_stackoverflow,
@@ -117,7 +97,6 @@ class CollectorsResource(ConfigurableResource):
             self._client,
             self._context,
             specs,
-            rate_limits=self._rate_limits,
         )
 
         seen = set()
@@ -173,7 +152,6 @@ class CollectorsResource(ConfigurableResource):
                 "GET",
                 "https://api.stackexchange.com/2.3/questions",
                 params=params,
-                rate_limits=self._rate_limits,
             )
             return resp.json().get("items", [])
 
@@ -226,7 +204,6 @@ class CollectorsResource(ConfigurableResource):
                 auth=(client_id, client_secret),
                 data={"grant_type": "client_credentials"},
                 headers={"User-Agent": user_agent},
-                rate_limits=self._rate_limits,
             )
             token = resp.json().get("access_token")
 
@@ -249,7 +226,6 @@ class CollectorsResource(ConfigurableResource):
                 f"{base}/r/{sub}/new",
                 params={"limit": 100},
                 headers=headers,
-                rate_limits=self._rate_limits,
             )
             return resp.json().get("data", {}).get("children", [])
 
@@ -301,7 +277,6 @@ class CollectorsResource(ConfigurableResource):
                     "hitsPerPage": 100,
                     "page": page,
                 },
-                rate_limits=self._rate_limits,
             )
             return resp.json().get("hits", [])
 

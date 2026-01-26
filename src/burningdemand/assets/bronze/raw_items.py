@@ -7,7 +7,7 @@ from burningdemand.resources.duckdb_resource import DuckDBResource
 from burningdemand.utils.url import normalize_url, url_hash
 
 
-@asset(partitions_def=source_day_partitions, group_name="bronze", name="raw_items")
+@asset(partitions_def=source_day_partitions)
 async def raw_items(
     context: AssetExecutionContext,
     db: DuckDBResource,
@@ -45,6 +45,7 @@ async def raw_items(
     df["created_at"] = df["created_at"].fillna("").astype("object")
 
     inserted_attempt = db.upsert_df(
+        "bronze",
         "raw_items",
         df,
         ["url_hash", "source", "collection_date", "url", "title", "body", "created_at"],

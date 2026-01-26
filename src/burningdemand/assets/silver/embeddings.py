@@ -1,18 +1,16 @@
 # burningdemand_dagster/assets/embeddings.py
 import pandas as pd
 import numpy as np
-from dagster import AssetExecutionContext, MaterializeResult, asset
+from dagster import AssetExecutionContext, AssetKey, MaterializeResult, asset
 
 from burningdemand.partitions import daily_partitions
 from burningdemand.resources.duckdb_resource import DuckDBResource
 from burningdemand.resources.embedding_resource import EmbeddingResource
-from burningdemand.assets.bronze.raw_items import raw_items
 
 
 @asset(
     partitions_def=daily_partitions,
-    group_name="silver",
-    deps=["raw_items"],
+    deps=[AssetKey(["bronze", "raw_items"])],
 )
 def embeddings(
     context: AssetExecutionContext,

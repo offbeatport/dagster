@@ -1,18 +1,24 @@
 # burningdemand_dagster/assets/issues.py
 import asyncio
 import os
+from pprint import pprint
 import pandas as pd
 from litellm import acompletion
 
-from dagster import AssetExecutionContext, MaterializeResult, MetadataValue, asset
+from dagster import (
+    AssetExecutionContext,
+    AssetKey,
+    MaterializeResult,
+    MetadataValue,
+    asset,
+)
 
 from burningdemand.partitions import daily_partitions
 from burningdemand.resources.llm_resource import LLMResource
 from burningdemand.resources.duckdb_resource import DuckDBResource
-from burningdemand.utils.llm_schema import IssueLabel, extract_first_json_obj
 
 
-@asset(partitions_def=daily_partitions, group_name="gold", deps=["clusters"])
+@asset(partitions_def=daily_partitions, deps=[AssetKey(["silver", "clusters"])])
 async def issues(
     context: AssetExecutionContext,
     db: DuckDBResource,
@@ -74,6 +80,8 @@ async def issues(
     errors = []
     results = []
 
+    # context.log.info("titles_by_cluster:", pprint(titles_by_cluster))
+
     async def label_one(cid: int, size: int):
         async with sem:
             titles = titles_by_cluster.get(cid, [])[:10]
@@ -93,29 +101,29 @@ Return ONLY valid JSON:
 }}"""
 
             try:
-                print(prompt)
-                # exit()
-                # response = await acompletion(
-                #     model=llm.model,
-                #     messages=[{"role": "user", "content": prompt}],
-                #     max_tokens=500,
-                # )
-                # raw = response.choices[0].message.content
-                # data = extract_first_json_obj(raw)
-                # label = IssueLabel.model_validate(data)
+                # print(prompt)
+                # # exit()
+                response = await acompletion(
+                    model=llm.model,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=500,
+                )
+                raw = response.choices[0].message.content
+                data = extract_first_json_obj(raw)
+                label = IssueLabel.model_validate(data)
 
-                # results.append(
-                #     {
-                #         "cluster_date": date,
-                #         "cluster_id": int(cid),
-                #         "canonical_title": label.canonical_title,
-                #         "category": label.category,
-                #         "description": label.description,
-                #         "would_pay_signal": bool(label.would_pay_signal),
-                #         "impact_level": label.impact_level,
-                #         "cluster_size": int(size),
-                #     }
-                # )
+                results.append(
+                    {
+                        "cluster_date": date,
+                        "cluster_id": int(cid),
+                        "canonical_title": label.canonical_title,
+                        "category": label.category,
+                        "description": label.description,
+                        "would_pay_signal": bool(label.would_pay_signal),
+                        "impact_level": label.impact_level,
+                        "cluster_size": int(size),
+                    }
+                )
             except Exception as e:
                 errors.append(f"cluster_id={cid}: {type(e).__name__}: {e}")
 

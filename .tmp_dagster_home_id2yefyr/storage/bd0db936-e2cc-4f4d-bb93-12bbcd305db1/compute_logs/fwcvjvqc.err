@@ -1,0 +1,228 @@
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - 86540 - LOGS_CAPTURED - Started capturing logs in process (pid: 86540).
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - 86540 - raw_items - STEP_START - Started execution of step "raw_items".
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - Executing 120 requests across 1 domains with rate limiting
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items -   api.github.com: 120 requests queued (limit: 28/60s)
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #1 executing (waited 0.00s, 1/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #2 executing (waited 0.00s, 2/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #3 executing (waited 0.00s, 3/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #4 executing (waited 0.00s, 4/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #5 executing (waited 0.00s, 5/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #6 executing (waited 0.00s, 6/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #7 executing (waited 0.00s, 7/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #8 executing (waited 0.00s, 8/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #9 executing (waited 0.00s, 9/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #10 executing (waited 0.00s, 10/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #11 executing (waited 0.00s, 11/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #12 executing (waited 0.00s, 12/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #13 executing (waited 0.00s, 13/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #14 executing (waited 0.00s, 14/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #15 executing (waited 0.00s, 15/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #16 executing (waited 0.00s, 16/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #17 executing (waited 0.00s, 17/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #18 executing (waited 0.00s, 18/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #19 executing (waited 0.00s, 19/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #20 executing (waited 0.00s, 20/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #21 executing (waited 0.00s, 21/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #22 executing (waited 0.00s, 22/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #23 executing (waited 0.00s, 23/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #24 executing (waited 0.00s, 24/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #25 executing (waited 0.00s, 25/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #26 executing (waited 0.00s, 26/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #27 executing (waited 0.00s, 27/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #28 executing (waited 0.00s, 28/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:25 +0000[0m - dagster - [34mDEBUG[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request queued: GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:26 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 1/30 used, 29 remaining
+[32m2026-01-26 14:20:26 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 4/30 used, 26 remaining
+[32m2026-01-26 14:20:26 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 2/30 used, 28 remaining
+[32m2026-01-26 14:20:26 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 3/30 used, 27 remaining
+[32m2026-01-26 14:20:26 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 5/30 used, 25 remaining
+[32m2026-01-26 14:20:26 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 7/30 used, 23 remaining
+[32m2026-01-26 14:20:26 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 6/30 used, 24 remaining
+[32m2026-01-26 14:20:27 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 8/30 used, 22 remaining
+[32m2026-01-26 14:20:27 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #29 executing (waited 2.02s, 29/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:27 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 9/30 used, 21 remaining
+[32m2026-01-26 14:20:27 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 11/30 used, 19 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 13/30 used, 17 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 12/30 used, 18 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 10/30 used, 20 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 17/30 used, 13 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 15/30 used, 15 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 16/30 used, 14 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 14/30 used, 16 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 19/30 used, 11 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 18/30 used, 12 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 21/30 used, 9 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 20/30 used, 10 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 23/30 used, 7 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 25/30 used, 5 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 22/30 used, 8 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 24/30 used, 6 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 26/30 used, 4 remaining
+[32m2026-01-26 14:20:28 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 28/30 used, 2 remaining
+[32m2026-01-26 14:20:29 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 27/30 used, 3 remaining
+[32m2026-01-26 14:20:29 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Request #30 executing (waited 4.16s, 30/28 in last 60s): GET https://api.github.com/search/issues
+[32m2026-01-26 14:20:29 +0000[0m - dagster - [34mINFO[0m - resource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - [api.github.com] Rate limit status: 29/30 used, 1 remaining
+[32m2026-01-26 14:20:29 +0000[0m - dagster - [34mERROR[0m - [31mresource:collector - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - raw_items - HTTP 403 GET https://api.github.com/search/issues
+Headers: {'date': 'Mon, 26 Jan 2026 14:20:29 GMT', 'content-type': 'application/json; charset=utf-8', 'x-github-media-type': 'github.v3; format=json', 'x-github-api-version-selected': '2022-11-28', 'x-ratelimit-limit': '30', 'x-ratelimit-remaining': '1', 'x-ratelimit-reset': '1769437286', 'x-ratelimit-used': '29', 'x-ratelimit-resource': 'search', 'access-control-expose-headers': 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset', 'access-control-allow-origin': '*', 'strict-transport-security': 'max-age=31536000; includeSubdomains; preload', 'x-frame-options': 'deny', 'x-content-type-options': 'nosniff', 'x-xss-protection': '0', 'referrer-policy': 'origin-when-cross-origin, strict-origin-when-cross-origin', 'content-security-policy': "default-src 'none'", 'vary': 'Accept-Encoding, Accept, X-Requested-With', 'content-encoding': 'gzip', 'transfer-encoding': 'chunked', 'server': 'github.com', 'x-github-request-id': 'D2C9:D2920:25CDC5:29298F:6977782C'}
+Body: {
+  "documentation_url": "https://docs.github.com/free-pro-team@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits",
+  "message": "You have exceeded a secondary rate limit. Please wait a few minutes before you try again. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) If you reach out to GitHub Support for help, please include the request ID D2C9:D2920:25CDC5:29298F:6977782C."
+}[0m
+[32m2026-01-26 14:20:29 +0000[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - bd0db936-e2cc-4f4d-bb93-12bbcd305db1 - 86540 - raw_items - STEP_FAILURE - Execution of step "raw_items" failed.
+
+dagster._core.errors.DagsterExecutionStepExecutionError: Error occurred while executing op "raw_items"::
+
+httpx.HTTPStatusError: Client error '403 Forbidden' for url 'https://api.github.com/search/issues?q=is%3Aissue+created%3A2026-01-23+%28%22is+there+software%22+OR+%22saas+for%22+OR+%22platform+for%22+OR+%22pricing%22+OR+%22cost%22+OR+%22expensive%22%29&per_page=100&page=10'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+
+Stack Trace:
+  File "/Users/vladpalos/Development/obp-dagster/.venv/lib/python3.11/site-packages/dagster/_core/execution/plan/utils.py", line 57, in op_execution_error_boundary
+    yield
+  File "/Users/vladpalos/Development/obp-dagster/.venv/lib/python3.11/site-packages/dagster/_utils/__init__.py", line 394, in iterate_with_context
+    next_output = next(iterator)
+                  ^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/.venv/lib/python3.11/site-packages/dagster/_core/execution/plan/compute.py", line 129, in gen_from_async_gen
+    yield context.event_loop.run_until_complete(async_gen.__anext__())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/.local/share/mise/installs/python/3.11.12/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/.venv/lib/python3.11/site-packages/dagster/_core/execution/plan/compute_generator.py", line 89, in _coerce_async_op_to_async_gen
+    result = await awaitable
+             ^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/assets/bronze/raw_items.py", line 19, in raw_items
+    items, meta = await collector.collect(source, date)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/resources/collectors/collectors_resource.py", line 66, in collect
+    return await collector(date)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/resources/collectors/collectors_resource.py", line 96, in _collect_github
+    responses = await batch_requests(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/utils/http.py", line 222, in batch_requests
+    results = await asyncio.gather(*tasks)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/vladpalos/Development/obp-dagster/src/burningdemand/utils/http.py", line 136, in request_async
+    resp.raise_for_status()
+  File "/Users/vladpalos/Development/obp-dagster/.venv/lib/python3.11/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+[0m

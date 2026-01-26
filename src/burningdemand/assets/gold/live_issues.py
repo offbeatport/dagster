@@ -1,7 +1,7 @@
 # burningdemand_dagster/assets/gold.py
 import asyncio
 import pandas as pd
-from dagster import AssetExecutionContext, MaterializeResult, MetadataValue, asset
+from dagster import AssetExecutionContext, MaterializeResult, AssetKey, asset
 
 from burningdemand.partitions import daily_partitions
 from burningdemand.resources.duckdb_resource import DuckDBResource
@@ -19,8 +19,7 @@ _SOURCE_TYPE_MAP = {
 @asset(
     partitions_def=daily_partitions,
     compute_kind="io",
-    group_name="gold",
-    deps=[issues],
+    deps=[AssetKey(["gold", "issues"])],
 )
 async def live_issues(
     context: AssetExecutionContext,

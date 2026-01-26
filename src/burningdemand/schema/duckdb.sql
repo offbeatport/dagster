@@ -1,55 +1,76 @@
--- 1. INITIALIZE NAMESPACES (SCHEMAS)
+-- 1. INITIALIZE NAMESPACES
 CREATE SCHEMA IF NOT EXISTS bronze;
 CREATE SCHEMA IF NOT EXISTS silver;
 CREATE SCHEMA IF NOT EXISTS gold;
 
--- 2. BRONZE LAYER: Raw Data (Latest State)
--- Purpose: Ingested data with minimal transformation.
--- Space Saving: We use a Primary Key to allow Upserts.
-CREATE TABLE IF NOT EXISTS bronze.items (
-    id VARCHAR PRIMARY KEY,         -- Unique ID from the source
-    content TEXT,                   -- Raw text/body
-    metadata JSON,                  -- Extra fields
-    scraped_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- 2. BRONZE LAYER
+CREATE TABLE IF NOT EXISTS bronze.raw_items (
+    url_hash        VARCHAR PRIMARY KEY,
+    source          VARCHAR,
+    collection_date DATE,
+    url             VARCHAR,
+    title           VARCHAR,
+    body            VARCHAR,
+    created_at      TIMESTAMP,
+    collected_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. SILVER LAYER: Enriched & Processed
--- Purpose: Data cleaned and ready for ML/Analysis.
+
+-- 3. SILVER LAYER
 CREATE TABLE IF NOT EXISTS silver.embeddings (
-    item_id VARCHAR PRIMARY KEY,    -- Foreign key to bronze.items
-    vector FLOAT[],                 -- The actual embedding array
-    model_name VARCHAR,             -- Model used (e.g., 'text-embedding-3-small')
-    updated_at TIMESTAMP,
-    FOREIGN KEY (item_id) REFERENCES bronze.items (id)
+    url_hash        VARCHAR PRIMARY KEY,
+    embedding       FLOAT[384],
+    embedding_date  DATE
 );
 
 CREATE TABLE IF NOT EXISTS silver.clusters (
-    item_id VARCHAR PRIMARY KEY,
-    cluster_id INTEGER,
-    topic_label VARCHAR,
-    confidence DOUBLE,
-    FOREIGN KEY (item_id) REFERENCES bronze.items (id)
+    cluster_date DATE,
+    cluster_id   INTEGER,
+    cluster_size INTEGER,
+    confidence   DOUBLE,
+    PRIMARY KEY (cluster_date, cluster_id)
 );
 
--- 4. GOLD LAYER: Business Insights
--- Purpose: Final "Burning Demand" issues.
--- Note: Often created as a TABLE for performance or a VIEW for space-saving.
+CREATE TABLE IF NOT EXISTS silver.cluster_members (
+    cluster_date DATE,
+    cluster_id   INTEGER,
+    url_hash     VARCHAR,
+    PRIMARY KEY (cluster_date, cluster_id, url_hash)
+);
+
+
+-- 4. GOLD LAYER
 CREATE TABLE IF NOT EXISTS gold.issues (
-    issue_id VARCHAR PRIMARY KEY,   -- Aggregated issue ID
-    title VARCHAR,
-    summary TEXT,
-    severity_score FLOAT,
-    is_active BOOLEAN DEFAULT TRUE,
-    last_detected_at TIMESTAMP
+    cluster_date     DATE,
+    cluster_id       INTEGER,
+    canonical_title  VARCHAR,
+    category         VARCHAR,
+    description      VARCHAR,
+    would_pay_signal BOOLEAN,
+    impact_level     VARCHAR,
+    cluster_size     INTEGER,
+    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (cluster_date, cluster_id)
 );
 
--- Example of a Space-Saving Gold View
-CREATE VIEW IF NOT EXISTS gold.view_active_issue_details AS
-SELECT 
-    i.id, 
-    i.content, 
-    c.topic_label, 
-    c.confidence
-FROM bronze.items i
-JOIN silver.clusters c ON i.id = c.item_id
-WHERE c.confidence > 0.8;
+CREATE TABLE IF NOT EXISTS gold.issue_evidence (
+    cluster_date DATE,
+    cluster_id   INTEGER,
+    url_hash     VARCHAR,
+    source       VARCHAR,
+    url          VARCHAR,
+    title        VARCHAR,
+    body         VARCHAR,
+    posted_at    TIMESTAMP,
+    PRIMARY KEY (cluster_date, cluster_id, url_hash)
+);
+
+CREATE TABLE IF NOT EXISTS gold.live_issues (
+    cluster_date DATE,
+    cluster_id   INTEGER,
+    issue_id     VARCHAR,
+    synced_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (cluster_date, cluster_id)
+);
+
+
