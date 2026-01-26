@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 from dagster import AssetExecutionContext, AssetKey, MaterializeResult, asset
+from sklearn.cluster import MiniBatchKMeans
 
 from burningdemand.partitions import daily_partitions
 from burningdemand.resources.duckdb_resource import DuckDBResource
@@ -15,7 +16,6 @@ def clusters(
     context: AssetExecutionContext,
     db: DuckDBResource,
 ) -> MaterializeResult:
-    from sklearn.cluster import MiniBatchKMeans
 
     date = context.partition_key
 

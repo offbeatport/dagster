@@ -75,7 +75,7 @@ class CollectorsResource(ConfigurableResource):
             chunk = keywords[i : i + 6]
             keyword_query = " OR ".join([f'"{kw}"' for kw in chunk])
             queries.append(f"is:issue created:{date} ({keyword_query})")
-        
+
         # Apply max_queries limit if configured
         max_queries = get_max_queries("github")
         if max_queries is not None:
@@ -117,7 +117,7 @@ class CollectorsResource(ConfigurableResource):
                         {
                             "url": url,
                             "title": title,
-                            "body": body[:get_body_max_length()],
+                            "body": body[: get_body_max_length()],
                             "created_at": it.get("created_at") or "",
                         }
                     )
@@ -169,7 +169,7 @@ class CollectorsResource(ConfigurableResource):
                         {
                             "url": it.get("link") or "",
                             "title": title,
-                            "body": body[:get_body_max_length()],
+                            "body": body[: get_body_max_length()],
                             "created_at": (
                                 datetime.fromtimestamp(
                                     int(created), tz=timezone.utc
@@ -246,7 +246,7 @@ class CollectorsResource(ConfigurableResource):
                             {
                                 "url": f"https://reddit.com{d.get('permalink','')}",
                                 "title": title,
-                                "body": body[:get_body_max_length()],
+                                "body": body[: get_body_max_length()],
                                 "created_at": datetime.fromtimestamp(
                                     created, tz=timezone.utc
                                 ).isoformat(),
@@ -295,7 +295,7 @@ class CollectorsResource(ConfigurableResource):
                             "url": it.get("url")
                             or f"https://news.ycombinator.com/item?id={it.get('objectID')}",
                             "title": title,
-                            "body": body[:get_body_max_length()],
+                            "body": body[: get_body_max_length()],
                             "created_at": (
                                 datetime.fromtimestamp(
                                     created_i, tz=timezone.utc

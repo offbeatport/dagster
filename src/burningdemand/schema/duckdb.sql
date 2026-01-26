@@ -38,6 +38,13 @@ CREATE TABLE IF NOT EXISTS silver.cluster_members (
     PRIMARY KEY (cluster_date, cluster_id, url_hash)
 );
 
+CREATE TABLE IF NOT EXISTS silver.cluster_summaries (
+    cluster_date DATE,
+    cluster_id   INTEGER,
+    summary      VARCHAR,
+    PRIMARY KEY (cluster_date, cluster_id)
+);
+
 
 -- 4. GOLD LAYER
 CREATE TABLE IF NOT EXISTS gold.issues (

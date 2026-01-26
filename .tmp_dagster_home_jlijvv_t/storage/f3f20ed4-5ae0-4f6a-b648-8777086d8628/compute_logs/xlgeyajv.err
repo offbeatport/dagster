@@ -1,0 +1,5 @@
+[32m2026-01-26 16:29:18 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - f3f20ed4-5ae0-4f6a-b648-8777086d8628 - 6922 - LOGS_CAPTURED - Started capturing logs in process (pid: 6922).
+[32m2026-01-26 16:29:18 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - f3f20ed4-5ae0-4f6a-b648-8777086d8628 - 6922 - clusters - STEP_START - Started execution of step "clusters".
+[32m2026-01-26 16:29:19 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - f3f20ed4-5ae0-4f6a-b648-8777086d8628 - 6922 - clusters - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+[32m2026-01-26 16:29:19 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - f3f20ed4-5ae0-4f6a-b648-8777086d8628 - 6922 - clusters - ASSET_MATERIALIZATION - Materialized value silver clusters.
+[32m2026-01-26 16:29:19 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - f3f20ed4-5ae0-4f6a-b648-8777086d8628 - 6922 - clusters - STEP_SUCCESS - Finished execution of step "clusters" in 1.15s.
