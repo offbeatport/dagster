@@ -6,6 +6,7 @@ from dagster import AssetExecutionContext, MaterializeResult, asset
 from burningdemand.partitions import daily_partitions
 from burningdemand.resources.duckdb_resource import DuckDBResource
 from burningdemand.resources.embedding_resource import EmbeddingResource
+from dagster import Config
 
 
 @asset(
@@ -22,15 +23,10 @@ def embeddings(
     date = context.partition_key
 
     items = db.query_df(
-        """
+        f"""
         SELECT b.url_hash, b.title, b.body
         FROM bronze.raw_items b
         WHERE b.collection_date = ?
-          AND NOT EXISTS (
-              SELECT 1
-              FROM silver.embeddings s
-              WHERE s.url_hash = b.url_hash
-          )
         """,
         [date],
     )

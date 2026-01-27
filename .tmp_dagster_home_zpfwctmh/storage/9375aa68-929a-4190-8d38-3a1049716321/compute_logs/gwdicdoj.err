@@ -1,0 +1,15 @@
+[32m2026-01-27 08:12:52 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 9375aa68-929a-4190-8d38-3a1049716321 - 14254 - LOGS_CAPTURED - Started capturing logs in process (pid: 14254).
+[32m2026-01-27 08:12:52 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 9375aa68-929a-4190-8d38-3a1049716321 - 14254 - raw_items - STEP_START - Started execution of step "raw_items".
+[32m2026-01-27 08:12:52 +0000[0m - dagster - [34mINFO[0m - resource:collector - 9375aa68-929a-4190-8d38-3a1049716321 - raw_items - Executing 120 requests with rate limiting
+[32m2026-01-27 08:12:52 +0000[0m - dagster - [34mINFO[0m - resource:collector - 9375aa68-929a-4190-8d38-3a1049716321 - raw_items - api.github.com: Batch 1 of 30 requests (1-30 of 120)
+[32m2026-01-27 08:12:55 +0000[0m - dagster - [34mINFO[0m - resource:collector - 9375aa68-929a-4190-8d38-3a1049716321 - raw_items - api.github.com: Waiting 60.0s before next batch...
+[32m2026-01-27 08:13:55 +0000[0m - dagster - [34mINFO[0m - resource:collector - 9375aa68-929a-4190-8d38-3a1049716321 - raw_items - api.github.com: Batch 2 of 30 requests (31-60 of 120)
+[32m2026-01-27 08:13:59 +0000[0m - dagster - [34mINFO[0m - resource:collector - 9375aa68-929a-4190-8d38-3a1049716321 - raw_items - api.github.com: Waiting 60.0s before next batch...
+[32m2026-01-27 08:14:59 +0000[0m - dagster - [34mINFO[0m - resource:collector - 9375aa68-929a-4190-8d38-3a1049716321 - raw_items - api.github.com: Batch 3 of 30 requests (61-90 of 120)
+[32m2026-01-27 08:15:03 +0000[0m - dagster - [34mINFO[0m - resource:collector - 9375aa68-929a-4190-8d38-3a1049716321 - raw_items - api.github.com: Waiting 60.0s before next batch...
+[32m2026-01-27 08:16:03 +0000[0m - dagster - [34mINFO[0m - resource:collector - 9375aa68-929a-4190-8d38-3a1049716321 - raw_items - api.github.com: Batch 4 of 30 requests (91-120 of 120)
+[32m2026-01-27 08:16:06 +0000[0m - dagster - [34mINFO[0m - resource:collector - 9375aa68-929a-4190-8d38-3a1049716321 - raw_items - Completed all 120 requests
+[32m2026-01-27 08:16:07 +0000[0m - dagster - [34mINFO[0m - resource:collector - 9375aa68-929a-4190-8d38-3a1049716321 - raw_items - GitHub: 120 requests, 8185 items
+[32m2026-01-27 08:16:07 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 9375aa68-929a-4190-8d38-3a1049716321 - 14254 - raw_items - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+[32m2026-01-27 08:16:07 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 9375aa68-929a-4190-8d38-3a1049716321 - 14254 - raw_items - ASSET_MATERIALIZATION - Materialized value raw_items.
+[32m2026-01-27 08:16:07 +0000[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 9375aa68-929a-4190-8d38-3a1049716321 - 14254 - raw_items - STEP_SUCCESS - Finished execution of step "raw_items" in 3m14s.

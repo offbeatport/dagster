@@ -1,9 +1,10 @@
 # burningdemand_dagster/assets/clusters.py
 import pandas as pd
 import numpy as np
-from dagster import AssetExecutionContext, MaterializeResult, asset
 import hdbscan
 
+from dagster import AssetExecutionContext, MaterializeResult, asset
+from datetime import datetime, timedelta
 from burningdemand.partitions import daily_partitions
 from burningdemand.resources.duckdb_resource import DuckDBResource
 
@@ -22,7 +23,6 @@ def clusters(
     date = context.partition_key
 
     # Rolling window: cluster last 7 days of data
-    from datetime import datetime, timedelta
 
     date_obj = datetime.strptime(date, "%Y-%m-%d")
     window_start = (date_obj - timedelta(days=6)).strftime(
