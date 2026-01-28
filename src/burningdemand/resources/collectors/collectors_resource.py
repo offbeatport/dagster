@@ -13,7 +13,10 @@ from .collector_queries import (
     get_query_tags,
     matches_query_keywords,
 )
-from burningdemand.utils.http import batch_requests, create_async_client, request_async
+from burningdemand.utils.request import (
+    batch_requests,
+    create_async_client,
+)
 from burningdemand.utils.url import iso_date_to_utc_bounds
 
 
@@ -134,7 +137,9 @@ class CollectorsResource(ConfigurableResource):
 
         self._context.log.info("StackOverflow: 10 pages")
 
-        async def fetch_page(page: int):
+        # Build all request specs for pages 1..10
+        specs = []
+        for page in range(1, 11):
             params = {
                 "fromdate": from_ts,
                 "todate": to_ts,
@@ -148,16 +153,21 @@ class CollectorsResource(ConfigurableResource):
             if key:
                 params["key"] = key
 
-            resp = await request_async(
-                self._client,
-                self._context,
-                "GET",
-                "https://api.stackexchange.com/2.3/questions",
-                params=params,
+            specs.append(
+                {
+                    "method": "GET",
+                    "url": "https://api.stackexchange.com/2.3/questions",
+                    "params": params,
+                }
             )
-            return resp.json().get("items", [])
 
-        pages = await asyncio.gather(*[fetch_page(p) for p in range(1, 11)])
+        responses = await batch_requests(
+            self._client,
+            self._context,
+            specs,
+        )
+
+        pages = [resp.json().get("items", []) for resp in responses]
 
         items = []
         for page_items in pages:
@@ -184,8 +194,10 @@ class CollectorsResource(ConfigurableResource):
                         }
                     )
 
-        self._context.log.info(f"StackOverflow: 10 requests, {len(items)} items")
-        return items, {"requests": 10, "used_key": bool(key)}
+        self._context.log.info(
+            f"StackOverflow: {len(responses)} requests, {len(items)} items"
+        )
+        return items, {"requests": len(responses), "used_key": bool(key)}
 
     async def _collect_reddit(self, date: str) -> Tuple[List[Dict], Dict]:
         from_ts, to_ts = iso_date_to_utc_bounds(date)
@@ -199,17 +211,23 @@ class CollectorsResource(ConfigurableResource):
         req_count = 0
 
         if client_id and client_secret:
-            req_count += 1
-            resp = await request_async(
+            # Use batch_requests for the token request as well
+            token_specs = [
+                {
+                    "method": "POST",
+                    "url": "https://www.reddit.com/api/v1/access_token",
+                    "auth": (client_id, client_secret),
+                    "data": {"grant_type": "client_credentials"},
+                    "headers": {"User-Agent": user_agent},
+                }
+            ]
+            token_resps = await batch_requests(
                 self._client,
                 self._context,
-                "POST",
-                "https://www.reddit.com/api/v1/access_token",
-                auth=(client_id, client_secret),
-                data={"grant_type": "client_credentials"},
-                headers={"User-Agent": user_agent},
+                token_specs,
             )
-            token = resp.json().get("access_token")
+            req_count += len(token_resps)
+            token = token_resps[0].json().get("access_token")
 
         base = "https://oauth.reddit.com" if token else "https://api.reddit.com"
         headers = {"User-Agent": user_agent}
@@ -220,20 +238,27 @@ class CollectorsResource(ConfigurableResource):
             f"Reddit: {len(subreddits)} subreddits, {'OAuth' if token else 'public'}"
         )
 
-        async def fetch_sub(sub: str):
-            nonlocal req_count
-            req_count += 1
-            resp = await request_async(
-                self._client,
-                self._context,
-                "GET",
-                f"{base}/r/{sub}/new",
-                params={"limit": 100},
-                headers=headers,
-            )
-            return resp.json().get("data", {}).get("children", [])
+        # Build specs for subreddit fetches
+        sub_specs = [
+            {
+                "method": "GET",
+                "url": f"{base}/r/{sub}/new",
+                "params": {"limit": 100},
+                "headers": headers,
+            }
+            for sub in subreddits
+        ]
 
-        results = await asyncio.gather(*[fetch_sub(s) for s in subreddits])
+        sub_resps = await batch_requests(
+            self._client,
+            self._context,
+            sub_specs,
+        )
+        req_count += len(sub_resps)
+
+        results = [
+            resp.json().get("data", {}).get("children", []) for resp in sub_resps
+        ]
 
         items = []
         for children in results:
@@ -271,22 +296,27 @@ class CollectorsResource(ConfigurableResource):
 
         self._context.log.info("HackerNews: 10 pages")
 
-        async def fetch_page(page: int):
-            resp = await request_async(
-                self._client,
-                self._context,
-                "GET",
-                "https://hn.algolia.com/api/v1/search_by_date",
-                params={
+        specs = [
+            {
+                "method": "GET",
+                "url": "https://hn.algolia.com/api/v1/search_by_date",
+                "params": {
                     "tags": "story",
                     "numericFilters": f"created_at_i>{from_ts},created_at_i<{to_ts}",
                     "hitsPerPage": 100,
                     "page": page,
                 },
-            )
-            return resp.json().get("hits", [])
+            }
+            for page in range(10)
+        ]
 
-        pages = await asyncio.gather(*[fetch_page(p) for p in range(10)])
+        responses = await batch_requests(
+            self._client,
+            self._context,
+            specs,
+        )
+
+        pages = [resp.json().get("hits", []) for resp in responses]
 
         items = []
         for hits in pages:
@@ -314,5 +344,7 @@ class CollectorsResource(ConfigurableResource):
                         }
                     )
 
-        self._context.log.info(f"HackerNews: 10 requests, {len(items)} items")
-        return items, {"requests": 10}
+        self._context.log.info(
+            f"HackerNews: {len(responses)} requests, {len(items)} items"
+        )
+        return items, {"requests": len(responses)}

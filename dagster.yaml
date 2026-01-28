@@ -15,12 +15,3 @@ schedule_storage:
   class: SqliteScheduleStorage
   config:
     base_dir: ./dagster_home
-
-concurrency:
-  pools:
-    granularity: op
-    limits:
-      - name: "source_api_rate_limit"
-        limit: 1
-  runs:
-    max_concurrent_runs: 5

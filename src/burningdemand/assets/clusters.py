@@ -152,12 +152,6 @@ def clusters(
     # Store assignments (upsert to handle re-runs)
     if cluster_assignments:
         assignments_df = pd.DataFrame(cluster_assignments)
-
-        # Ensure DuckDB-friendly dtypes (avoid pandas "string"/"str" extension dtypes)
-        assignments_df["url_hash"] = assignments_df["url_hash"].astype("object")
-        assignments_df["cluster_date"] = assignments_df["cluster_date"].astype("object")
-        assignments_df["cluster_id"] = assignments_df["cluster_id"].astype("int64")
-
         db.upsert_df(
             "silver",
             "cluster_assignments",

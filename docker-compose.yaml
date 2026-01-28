@@ -64,6 +64,18 @@ services:
       start_period: 10s
     depends_on:
       - dagster-webserver
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: dagster-redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 128M
 
 volumes:
   dagster_home:
